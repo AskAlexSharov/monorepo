@@ -1,1 +1,1 @@
-module github.com/nizsheanez/gomod1/client
+module github.com/nizsheanez/monorepo/proj1/client
