@@ -1,2 +1,0 @@
-# github.com/nizsheanez/monorepo/proj1/client v0.0.0-20180905045435-26dd771cb693
-github.com/nizsheanez/monorepo/proj1/client
