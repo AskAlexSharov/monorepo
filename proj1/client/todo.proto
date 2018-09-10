@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package client;
+
+//import "google/protobuf/source_context.proto";
+//import "google/protobuf/type.proto";
+
+service Api {
+  rpc List (ListRequest) returns (ListReply) {}
+  rpc Create (CreateRequest) returns (CreateReply) {}
+}
+
+enum TodoItemStatus {
+  ACTIVE = 0;
+  DONE = 1;
+  DELETED = 2;
+}
+
+message ToDoItem {
+  string name = 1;
+  TodoItemStatus status = 2;
+}
+
+message ListRequest {
+  bool showInactive = 1;
+}
+
+message ListReply {
+  repeated TodoItemStatus items = 1;
+}
+
+message CreateRequest {
+  string name = 1;
+}
+
+message CreateReply {
+  string message = 1;
+}
+
