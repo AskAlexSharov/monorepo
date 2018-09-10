@@ -4,12 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/sony/gobreaker"
-	"google.golang.org/grpc"
-	"os"
-	"time"
+	"log"
 
-	"github.com/go-kit/kit/log"
+	//"github.com/sony/gobreaker"
+	"google.golang.org/grpc"
+	"time"
 
 	"github.com/nizsheanez/monorepo/todo/projects"
 	"github.com/nizsheanez/monorepo/todo/todo"
@@ -20,33 +19,17 @@ var (
 )
 
 func main() {
+	//root := context.Background()
 
-	var logger log.Logger
-	logger = log.NewLogfmtLogger(os.Stdout)
-	logger = log.With(logger, "caller", log.DefaultCaller)
-	logger = log.With(logger, "transport", "grpc")
-
-	root := context.Background()
-
-	cc, err := grpc.Dial(*grpcAddr)
+	conn, err := grpc.Dial(*grpcAddr, grpc.WithInsecure(), grpc.WithTimeout(time.Second))
 	if err != nil {
-		_ = logger.Log("err", err)
-		os.Exit(1)
-	}
-	defer cc.Close()
-
-	//conn, err := grpc.Dial(*grpcAddr, grpc.WithInsecure(), grpc.WithTimeout(time.Second))
-	conn, err := grpc.Dial("127.0.0.1:8083", grpc.WithInsecure(), grpc.WithTimeout(time.Second))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 	defer conn.Close()
 
-	todoApi := todo.NewApiService("todo")
-	projectsApi := projects.NewApiService("todo", service.Client())
+	todoApi := todo.NewApiClient(conn)
+	projectsApi := projects.NewApiClient(conn)
 
-	todoApi.List(context.Background(), &todo.ListRequest{})
+	fmt.Println(todoApi.List(context.Background(), &todo.ListRequest{}))
 	projectsApi.List(context.Background(), &projects.ListRequest{})
-
 }

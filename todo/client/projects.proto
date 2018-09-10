@@ -1,10 +1,15 @@
 syntax = "proto3";
 
 //import "google/protobuf/source_context.proto";
-//import "google/protobuf/type.proto";
+import "google/protobuf/type.proto";
+option go_package = "google.golang.org/genproto/googleapis/api/annotations;annotations";
 
-service Api {
-  rpc List (ListRequest) returns (ListReply) {}
+service Notes {
+  rpc List (ListRequest) returns (ListReply) {
+    option (google.api.http) = {
+      get: "/v1/{name=shelves/*/books/*}"
+    };
+  }
   rpc Create (CreateRequest) returns (CreateReply) {}
 }
 

@@ -3,12 +3,12 @@ syntax = "proto3";
 //import "google/protobuf/source_context.proto";
 //import "google/protobuf/type.proto";
 
-service Api {
-  rpc List (ListRequest) returns (ListReply) {}
+service ToDo {
+  rpc ListItems (ListRequest) returns (ListReply) {}
   rpc Create (CreateRequest) returns (CreateReply) {}
 }
 
-enum ItemStatus {
+enum Status {
   ACTIVE = 0;
   DONE = 1;
   DELETED = 2;
@@ -16,7 +16,7 @@ enum ItemStatus {
 
 message Item {
   string name = 1;
-  ItemStatus status = 2;
+  Status status = 2;
 }
 
 message ListRequest {
@@ -24,7 +24,7 @@ message ListRequest {
 }
 
 message ListReply {
-  repeated ItemStatus items = 1;
+  repeated Status items = 1;
 }
 
 message CreateRequest {

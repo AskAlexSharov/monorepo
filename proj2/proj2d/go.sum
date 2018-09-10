@@ -79,10 +79,14 @@ github.com/nizsheanez/monorepo/todo/projects v1.0.1 h1:nkbN0SHZku9YKw9eRchduZP54
 github.com/nizsheanez/monorepo/todo/projects v1.0.1/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
 github.com/nizsheanez/monorepo/todo/projects v1.0.3 h1:xO+Ar9CCCbT71ite4yE+43nG2BjKPfdMO8+h+eS4zoo=
 github.com/nizsheanez/monorepo/todo/projects v1.0.3/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
+github.com/nizsheanez/monorepo/todo/projects v1.0.4 h1:y4UaDZ1icWvSPHl4IbE6hZbTx+lLZdJ0CQuoSAAu+jg=
+github.com/nizsheanez/monorepo/todo/projects v1.0.4/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
 github.com/nizsheanez/monorepo/todo/todo v1.0.4 h1:Q2HjwWNSVx9x+1QrTUYSOsRZ3nWMc7XTCawni4C3YI8=
 github.com/nizsheanez/monorepo/todo/todo v1.0.4/go.mod h1:pXWXVs4TQyfNJaWWZJ9Ee0Ge7MiVgZxwOqHjvDKbhUY=
 github.com/nizsheanez/monorepo/todo/todo v1.0.6 h1:Lbd6Ve61mgh9tsGAkrZbvmd7GFzpg5KN98TuSaEGqYI=
 github.com/nizsheanez/monorepo/todo/todo v1.0.6/go.mod h1:pXWXVs4TQyfNJaWWZJ9Ee0Ge7MiVgZxwOqHjvDKbhUY=
+github.com/nizsheanez/monorepo/todo/todo v1.0.7 h1:ayEp+ubVg1HgwS/nPJIrByDmagnbBuT4YG2zButXYWE=
+github.com/nizsheanez/monorepo/todo/todo v1.0.7/go.mod h1:pXWXVs4TQyfNJaWWZJ9Ee0Ge7MiVgZxwOqHjvDKbhUY=
 github.com/nlopes/slack v0.3.0 h1:jCxvaS8wC4Bb1jnbqZMjCDkOOgy4spvQWcrw/TF0L0E=
 github.com/nlopes/slack v0.3.0/go.mod h1:jVI4BBK3lSktibKahxBF74txcK2vyvkza1z/+rRnVAM=
 github.com/pborman/uuid v0.0.0-20180909234540-25cd46ecac86 h1:kX78iVDtH+/sB0tiR3mkEEsO338B2F3OwE6t5d7vQmE=
