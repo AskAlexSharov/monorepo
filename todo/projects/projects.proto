@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-package projects;
-
 //import "google/protobuf/source_context.proto";
 //import "google/protobuf/type.proto";
 

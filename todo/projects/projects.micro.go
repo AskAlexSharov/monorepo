@@ -59,7 +59,7 @@ func NewApiService(name string, c client.Client) ApiService {
 		c = client.NewClient()
 	}
 	if len(name) == 0 {
-		name = "projects"
+		name = "api"
 	}
 	return &apiService{
 		c:    c,

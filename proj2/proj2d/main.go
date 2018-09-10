@@ -11,6 +11,8 @@ import (
 var serverAddr = "127.0.0.1"
 
 func main() {
+	client := proto.NewGreeterService("greeter", service.Client())
+
 	conn, err := grpc.Dial(serverAddr)
 	if err != nil {
 		log.Fatalf("can't connect todo: %s", err)
