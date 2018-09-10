@@ -1,11 +1,12 @@
+github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
-github.com/nizsheanez/monorepo v0.0.0-20180910080142-2ed0fa8ce3c4 h1:k6IGSCr83i5AOKLZRIGNg03/aa04ZK1CpLsAXV6i6NU=
-github.com/nizsheanez/monorepo/proj1/client v1.0.1 h1:bgaQEZImvAV27AmPLV1CCT/cFJ2I9aP6l7LFWS9u65U=
-github.com/nizsheanez/monorepo/proj1/client v1.0.1/go.mod h1:bt/c9fmMGBGzkl0U4BAMq2L01OL6lUGoYjKlAct1uF4=
-github.com/nizsheanez/monorepo/proj1/client v1.0.2 h1:M0fAQl9rsL3XvNuip3cOel+A9S6RK0F5S85EsyPLP8s=
-github.com/nizsheanez/monorepo/proj1/client v1.0.2/go.mod h1:O8gOl7x1S37enzmeQAOhVkO+t/bnrXtU7hU0to8r+YA=
+golang.org/x/net v0.0.0-20180906233101-161cd47e91fd h1:nTDtHvHSdCn1m6ITfMRqtOd/9+7a3s8RBNOZ3eYZzJA=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
+golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e h1:o3PsSEY8E4eXWkXrIP9YJALUkVZqzHJT5DOasTyn8Vs=
 golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
+google.golang.org/genproto v0.0.0-20180831171423-11092d34479b h1:lohp5blsw53GBXtLyLNaTXPXS9pJ1tiTw61ZHUoE9Qw=
 google.golang.org/genproto v0.0.0-20180831171423-11092d34479b/go.mod h1:JiN7NxoALGmiZfu7CAH4rXhgtRTLTxftemlI0sWmxmc=
+google.golang.org/grpc v1.14.0 h1:ArxJuB1NWfPY6r9Gp9gqwplT0Ge7nqv9msgu03lHLmo=
 google.golang.org/grpc v1.14.0/go.mod h1:yo6s7OP7yaDglbqo1J04qKzAhqBH6lvTonzMVmEdcZw=
