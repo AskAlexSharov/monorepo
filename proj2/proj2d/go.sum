@@ -7,6 +7,10 @@ github.com/nizsheanez/monorepo/proj1/client v1.0.2 h1:M0fAQl9rsL3XvNuip3cOel+A9S
 github.com/nizsheanez/monorepo/proj1/client v1.0.2/go.mod h1:O8gOl7x1S37enzmeQAOhVkO+t/bnrXtU7hU0to8r+YA=
 github.com/nizsheanez/monorepo/proj1/client v1.0.3 h1:nfhn4wP9AfsH/sbk22FBACE7ccdVO/rm8ESlqCcWIjQ=
 github.com/nizsheanez/monorepo/proj1/client v1.0.3/go.mod h1:O8gOl7x1S37enzmeQAOhVkO+t/bnrXtU7hU0to8r+YA=
+github.com/nizsheanez/monorepo/todo/projects v1.0.1 h1:nkbN0SHZku9YKw9eRchduZP54LnmcZk+HiAbVvIYPqA=
+github.com/nizsheanez/monorepo/todo/projects v1.0.1/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
+github.com/nizsheanez/monorepo/todo/todo v1.0.4 h1:Q2HjwWNSVx9x+1QrTUYSOsRZ3nWMc7XTCawni4C3YI8=
+github.com/nizsheanez/monorepo/todo/todo v1.0.4/go.mod h1:pXWXVs4TQyfNJaWWZJ9Ee0Ge7MiVgZxwOqHjvDKbhUY=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd h1:nTDtHvHSdCn1m6ITfMRqtOd/9+7a3s8RBNOZ3eYZzJA=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=

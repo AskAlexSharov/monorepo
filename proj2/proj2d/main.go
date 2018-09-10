@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/nizsheanez/monorepo/todo/projects"
 	"github.com/nizsheanez/monorepo/todo/todo"
 	"google.golang.org/grpc"
 	"log"
@@ -18,5 +19,6 @@ func main() {
 	todoApi := todo.NewApiClient(conn)
 	projectsApi := projects.NewApiClient(conn)
 
-	todoApi.List(context.Background(), projectsApi)
+	todoApi.List(context.Background(), &todo.ListRequest{})
+	projectsApi.List(context.Background(), &projects.ListRequest{})
 }

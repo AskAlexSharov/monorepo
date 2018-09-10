@@ -7,11 +7,6 @@ import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
 
-import (
-	context "golang.org/x/net/context"
-	grpc "google.golang.org/grpc"
-)
-
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = proto.Marshal
 var _ = fmt.Errorf
@@ -254,111 +249,6 @@ func init() {
 	proto.RegisterType((*CreateRequest)(nil), "todo.CreateRequest")
 	proto.RegisterType((*CreateReply)(nil), "todo.CreateReply")
 	proto.RegisterEnum("todo.ItemStatus", ItemStatus_name, ItemStatus_value)
-}
-
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion4
-
-// ApiClient is the client API for Api service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type ApiClient interface {
-	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListReply, error)
-	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateReply, error)
-}
-
-type apiClient struct {
-	cc *grpc.ClientConn
-}
-
-func NewApiClient(cc *grpc.ClientConn) ApiClient {
-	return &apiClient{cc}
-}
-
-func (c *apiClient) List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListReply, error) {
-	out := new(ListReply)
-	err := c.cc.Invoke(ctx, "/todo.Api/List", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *apiClient) Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*CreateReply, error) {
-	out := new(CreateReply)
-	err := c.cc.Invoke(ctx, "/todo.Api/Create", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// ApiServer is the server API for Api service.
-type ApiServer interface {
-	List(context.Context, *ListRequest) (*ListReply, error)
-	Create(context.Context, *CreateRequest) (*CreateReply, error)
-}
-
-func RegisterApiServer(s *grpc.Server, srv ApiServer) {
-	s.RegisterService(&_Api_serviceDesc, srv)
-}
-
-func _Api_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).List(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/todo.Api/List",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).List(ctx, req.(*ListRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Api_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApiServer).Create(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/todo.Api/Create",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServer).Create(ctx, req.(*CreateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _Api_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "todo.Api",
-	HandlerType: (*ApiServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "List",
-			Handler:    _Api_List_Handler,
-		},
-		{
-			MethodName: "Create",
-			Handler:    _Api_Create_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "todo.proto",
 }
 
 func init() { proto.RegisterFile("todo.proto", fileDescriptor_todo_f4979e2759c3fcba) }
