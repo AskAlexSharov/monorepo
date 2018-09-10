@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/proj1/client
+module github.com/nizsheanez/monorepo/proj1
 
 require (
 	github.com/golang/protobuf v1.2.0

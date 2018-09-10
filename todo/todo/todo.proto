@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package client;
+package todo;
 
 //import "google/protobuf/source_context.proto";
 //import "google/protobuf/type.proto";
@@ -10,15 +10,15 @@ service Api {
   rpc Create (CreateRequest) returns (CreateReply) {}
 }
 
-enum TodoItemStatus {
+enum ItemStatus {
   ACTIVE = 0;
   DONE = 1;
   DELETED = 2;
 }
 
-message ToDoItem {
+message Item {
   string name = 1;
-  TodoItemStatus status = 2;
+  ItemStatus status = 2;
 }
 
 message ListRequest {
@@ -26,7 +26,7 @@ message ListRequest {
 }
 
 message ListReply {
-  repeated TodoItemStatus items = 1;
+  repeated ItemStatus items = 1;
 }
 
 message CreateRequest {
