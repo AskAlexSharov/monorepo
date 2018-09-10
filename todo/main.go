@@ -1,4 +1,4 @@
-//go:generate protoc -I ./vendor/github.com/golang/protobuf/ptypes -I ./todo     todo.proto     --micro_out=./todo --go_out=./todo
-//go:generate protoc -I ./vendor/github.com/golang/protobuf/ptypes -I ./projects projects.proto --micro_out=./projects --go_out=./projects
+//go:generate protoc -I ./vendor/github.com/golang/protobuf/ptypes -I ./todo     todo.proto     --go_out=plugins=grpc:todo
+//go:generate protoc -I ./vendor/github.com/golang/protobuf/ptypes -I ./projects projects.proto --go_out=plugins=grpc:projects
 
 package main
