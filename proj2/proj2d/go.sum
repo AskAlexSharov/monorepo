@@ -21,6 +21,10 @@ github.com/nizsheanez/monorepo/todo/client/v2 v2.1.11 h1:SgikjS3W1mfsT02IF6PKWMO
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.11/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.12 h1:uwkX3KlLCWpgPvc7TQ2gNe4+lsQkD8Cat5aA95QjCRs=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.12/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
+github.com/nizsheanez/monorepo/todo/sdk v1.2.1 h1:23AX623RmA+pLBwjCNIjVsiVgEE0miWeID1z+V3FR94=
+github.com/nizsheanez/monorepo/todo/sdk v1.2.1/go.mod h1:an1Gzh1Y8sfaqmfE3vr96oU3MqxV/eJ2RL4hemEdUz0=
+github.com/nizsheanez/monorepo/todo/sdk/v2 v2.2.1 h1:C0H8dntFMdWqKGMsHFsA1X3s9kx+LCuwPrnKOcMLEhM=
+github.com/nizsheanez/monorepo/todo/sdk/v2 v2.2.1/go.mod h1:PFqwSXEZ8XxG+jDVC8QSufDkOPdW2nIHxsEKkp18uc4=
 golang.org/x/lint v0.0.0-20180702182130-06c8688daad7/go.mod h1:UVdnD1Gm6xHRNCYTkRU2/jEulfH38KcIWyp/GAMgvoE=
 golang.org/x/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3 h1:czFLhve3vsQetD6JOJ8NZZvGQIXlnN3/yXxbT6/awxI=

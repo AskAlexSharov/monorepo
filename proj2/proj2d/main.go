@@ -11,8 +11,8 @@ import (
 	"time"
 
 	//"github.com/nizsheanez/monorepo/todo/projects"
-	todoV1 "github.com/nizsheanez/monorepo/todo/client"
-	"github.com/nizsheanez/monorepo/todo/client/v2"
+	todo_sdk_v1 "github.com/nizsheanez/monorepo/todo/sdk"
+	"github.com/nizsheanez/monorepo/todo/sdk/v2"
 )
 
 var (
@@ -28,13 +28,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	todoService := todo.NewTodoServiceClient(conn)
-	todoServiceV1 := todoV1.NewTodoServiceClient(conn)
+	todoService := todo_sdk.NewTodoServiceClient(conn)
+	todoServiceV1 := todo_sdk_v1.NewTodoServiceClient(conn)
 
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoService.List(context.Background(), &todo.ListRequest{}))
-	fmt.Println(todoServiceV1.List(context.Background(), &todoV1.ListRequest{}))
+	fmt.Println(todoService.List(context.Background(), &todo_sdk.ListRequest{}))
+	fmt.Println(todoServiceV1.List(context.Background(), &todo_sdk_v1.ListRequest{}))
 
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }
