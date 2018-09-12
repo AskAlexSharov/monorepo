@@ -75,6 +75,8 @@ github.com/nizsheanez/monorepo/proj1/client v1.0.2 h1:M0fAQl9rsL3XvNuip3cOel+A9S
 github.com/nizsheanez/monorepo/proj1/client v1.0.2/go.mod h1:O8gOl7x1S37enzmeQAOhVkO+t/bnrXtU7hU0to8r+YA=
 github.com/nizsheanez/monorepo/proj1/client v1.0.3 h1:nfhn4wP9AfsH/sbk22FBACE7ccdVO/rm8ESlqCcWIjQ=
 github.com/nizsheanez/monorepo/proj1/client v1.0.3/go.mod h1:O8gOl7x1S37enzmeQAOhVkO+t/bnrXtU7hU0to8r+YA=
+github.com/nizsheanez/monorepo/todo v0.0.0-20180910125834-8dada1c450a9 h1:Cx9E6zTUNUeLuPsJNQn54B4FT6+Q2Ga2SUm0y0saNLw=
+github.com/nizsheanez/monorepo/todo v0.0.0-20180910125834-8dada1c450a9/go.mod h1:yR9s3K5RnygezOqaAkkmu7YZTli2yaZjSVTk/fst5B0=
 github.com/nizsheanez/monorepo/todo/projects v1.0.1 h1:nkbN0SHZku9YKw9eRchduZP54LnmcZk+HiAbVvIYPqA=
 github.com/nizsheanez/monorepo/todo/projects v1.0.1/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
 github.com/nizsheanez/monorepo/todo/projects v1.0.3 h1:xO+Ar9CCCbT71ite4yE+43nG2BjKPfdMO8+h+eS4zoo=
