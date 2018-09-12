@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package todo.v1;
+
+option go_package = "todo";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service TodoService {
+  rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {
+    option (google.api.http) ={
+			post: "/v1/todo"
+			body: "item"
+		};
+  }
+
+  // Bulk version of CreateTodo
+  rpc CreateTodos(CreateTodosRequest) returns (CreateTodosResponse) {
+    option (google.api.http) ={
+			post: "/v1/todo/bulk"
+			body: "*"
+		};
+  }
+
+  rpc GetTodo(GetTodoRequest) returns (GetTodoResponse) {
+    option (google.api.http) ={
+			get: "/v1/todo/{id}"
+		};
+  }
+
+  rpc ListTodo(ListTodoRequest) returns (ListTodoResponse) {
+    option (google.api.http) ={
+			get: "/v1/todo"
+		};
+  }
+
+  rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {
+    option (google.api.http) ={
+			delete: "/v1/todo/{id}"
+		};
+  }
+
+  rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {
+    option (google.api.http) ={
+			put: "/v1/todo"
+			body: "item"
+		};
+  }
+
+  rpc UpdateTodos(UpdateTodosRequest) returns (UpdateTodosResponse) {
+    option (google.api.http) ={
+			put: "/v1/todo/bulk"
+			body: "*"
+		};
+  }
+}
+
+message Todo {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+
+  // @inject_tag: sql:",notnull,default:false"
+  bool completed = 4;
+
+  // @inject_tag: sql:"type:timestamptz,default:now()"
+  google.protobuf.Timestamp created_at = 5;
+
+  // @inject_tag: sql:"type:timestamptz"
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateTodoRequest {
+  Todo item = 1;
+}
+
+message CreateTodoResponse {
+  string id = 1;
+}
+
+message CreateTodosRequest {
+  repeated Todo items = 1;
+}
+
+message CreateTodosResponse {
+  repeated string ids = 1;
+}
+
+message GetTodoRequest {
+  string id = 1;
+}
+
+message GetTodoResponse {
+  Todo item = 1;
+}
+
+message ListTodoRequest {
+  int32 limit = 1;
+  bool not_completed = 2;
+}
+
+message ListTodoResponse {
+  repeated Todo items = 1;
+}
+
+message DeleteTodoRequest {
+  string id = 1;
+}
+
+message DeleteTodoResponse {}
+
+message UpdateTodoRequest {
+  Todo item = 1;
+}
+
+message UpdateTodoResponse {}
+
+message UpdateTodosRequest {
+  repeated Todo items = 1;
+}
+
+message UpdateTodosResponse {}

@@ -1,0 +1,24 @@
+version = "unstable"
+plugins = ["grpc"]
+
+
+[includes]
+  before = [
+    "$(pwd)/",
+    "$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis",
+    "$GOPATH/src/github.com/golang/protobuf"
+  ]
+
+  vendored = [
+#      "github.com/gogo/protobuf",
+#      "github.com/grpc-ecosystem/grpc-gateway"
+  ]
+
+  # Paths that will be added untouched to the end of the includes. We use
+  # `/usr/local/include` to pickup the common install location of protobuf.
+  # This is the default.
+  after = ["/usr/local/include"]
+
+[[descriptors]]
+prefix = "./"
+target = "./v1.pb.txt"
