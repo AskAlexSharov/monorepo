@@ -1,0 +1,26 @@
+version: '3.6'
+services:
+  mongo:
+    image: mongo:4.1
+#      volumes:
+#      - mongo_data:/data/db
+#      - ./containers/mongo/config/:/data/configdb
+    ports:
+    - "27017:27017"
+  consul:
+    image: consul
+    command: -advertise 0.0.0.0 -server -bootstrap -ui-dir /ui
+#      volumes:
+#      - ~/projects/data/consul:/data
+    ports:
+    - "8300:8300"
+    - "8301:8301"
+    - "8301:8301/udp"
+    - "8302:8302"
+    - "8302:8302/udp"
+    - "8400:8400"
+    - "8500:8500"
+    - "8600:53/udp"
+
+volumes:
+  mongo_data:

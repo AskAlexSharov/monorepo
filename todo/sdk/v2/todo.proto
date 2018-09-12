@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package todo.sdk.v2;
+package todo.v2;
 
 option go_package = "todo_sdk";
 
