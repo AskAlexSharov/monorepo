@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package todo.client.v1;
 
-option go_package = "todo_client";
+option go_package = "todo";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
