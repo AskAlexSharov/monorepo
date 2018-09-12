@@ -4,8 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	//"github.com/nizsheanez/monorepo/todo/projects"
-	//"github.com/nizsheanez/monorepo/todo/todo"
 	"log"
 
 	//"github.com/sony/gobreaker"
@@ -30,13 +28,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	todoApi := todo.NewTodoServiceClient(conn)
-	todoApiV1 := todoV1.NewTodoServiceClient(conn)
+	todoService := todo.NewTodoServiceClient(conn)
+	todoServiceV1 := todoV1.NewTodoServiceClient(conn)
 
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoApi.List(context.Background(), &todo.ListRequest{}))
-	fmt.Println(todoApiV1.List(context.Background(), &todoV1.ListRequest{}))
+	fmt.Println(todoService.List(context.Background(), &todo.ListRequest{}))
+	fmt.Println(todoServiceV1.List(context.Background(), &todoV1.ListRequest{}))
 
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }

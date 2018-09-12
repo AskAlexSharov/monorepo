@@ -1,6 +1,5 @@
 version = "unstable"
-plugins = ["grpc"]
-
+plugins = ["grpc", "protoc-gen-grpc-gateway", "protoc-gen-swagger"]
 
 [includes]
   before = [
