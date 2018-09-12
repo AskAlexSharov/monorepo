@@ -13,7 +13,8 @@ import (
 	"time"
 
 	//"github.com/nizsheanez/monorepo/todo/projects"
-	"github.com/nizsheanez/monorepo/todo/client/v2"
+	todoV1 "github.com/nizsheanez/monorepo/todo/client"
+	todo "github.com/nizsheanez/monorepo/todo/client/v2"
 )
 
 var (
@@ -29,9 +30,13 @@ func main() {
 	}
 	defer conn.Close()
 
-	todoApi := client.NewTodoServiceClient(conn)
+	todoApi := todo.NewTodoServiceClient(conn)
+	todoApiV1 := todoV1.NewTodoServiceClient(conn)
+
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoApi.ListTodo(context.Background(), &client.ListTodoRequest{}))
+	fmt.Println(todoApi.ListTodo(context.Background(), &todo.ListTodoRequest{}))
+	fmt.Println(todoApiV1.ListTodo(context.Background(), &todoV1.ListTodoRequest{}))
+
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }

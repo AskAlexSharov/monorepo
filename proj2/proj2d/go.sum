@@ -91,6 +91,8 @@ github.com/nizsheanez/monorepo/todo v0.0.0-20180910125834-8dada1c450a9 h1:Cx9E6z
 github.com/nizsheanez/monorepo/todo v0.0.0-20180910125834-8dada1c450a9/go.mod h1:yR9s3K5RnygezOqaAkkmu7YZTli2yaZjSVTk/fst5B0=
 github.com/nizsheanez/monorepo/todo v1.0.0 h1:gGQwhazi2jSWs3zoJuAywpQ8SWpXcYT9Romp6ZjMoIE=
 github.com/nizsheanez/monorepo/todo v1.0.0/go.mod h1:wCLk2dsJkyZi6iRWEcfVF7SFW9S4iKFlgZuspIO9KN0=
+github.com/nizsheanez/monorepo/todo/client v1.1.2 h1:LPiR8f+Y2MXY9TVVj0VE2CElSfh/2d38EdROdQArPF4=
+github.com/nizsheanez/monorepo/todo/client v1.1.2/go.mod h1:3Uehau0j5f8bMGk2sD/8zJwghK0jQj79809KBlv+zrc=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.0 h1:k4AJHAe40+eq6dy7Qv2mYJ528UZfwKjFZkFgUjCfZs4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.0/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.1 h1:MQkuU1xLrfK3p3Hv+bXxezM6jmWKLGQkMuSDwhwTKSs=
