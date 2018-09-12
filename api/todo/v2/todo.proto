@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package todo.v2;
+
+option go_package = "todo";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service TodoService {
+  rpc Create (CreateRequest) returns (CreateResponse) {
+    option (google.api.http) ={
+			post: "/v2/todo"
+			body: "item"
+		};
+  }
+
+  // Bulk version of CreateTodo
+  rpc CreateBulk (CreateBulkRequest) returns (CreateBulkResponse) {
+    option (google.api.http) ={
+			post: "/v2/todo/bulk"
+			body: "*"
+		};
+  }
+
+  rpc Get (GetRequest) returns (GetResponse) {
+    option (google.api.http) ={
+			get: "/v2/todo/{id}"
+		};
+  }
+
+  rpc List (ListRequest) returns (ListResponse) {
+    option (google.api.http) ={
+			get: "/v2/todo"
+		};
+  }
+
+  rpc Delete (DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) ={
+			delete: "/v2/todo/{id}"
+		};
+  }
+
+  rpc Update (UpdateRequest) returns (UpdateResponse) {
+    option (google.api.http) ={
+			put: "/v2/todo"
+			body: "item"
+		};
+  }
+
+  rpc UpdateBulk (UpdateBulkRequest) returns (UpdateBulkResponse) {
+    option (google.api.http) ={
+			put: "/v2/todo/bulk"
+			body: "*"
+		};
+  }
+}
+
+message Todo {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+
+  // @inject_tag: sql:",notnull,default:false"
+  bool completed = 4;
+
+  // @inject_tag: sql:"type:timestamptz,default:now()"
+  google.protobuf.Timestamp created_at = 5;
+
+  // @inject_tag: sql:"type:timestamptz"
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateRequest {
+  Todo item = 1;
+}
+
+message CreateResponse {
+  string id = 1;
+}
+
+message CreateBulkRequest {
+  repeated Todo items = 1;
+}
+
+message CreateBulkResponse {
+  repeated string ids = 1;
+}
+
+message GetRequest {
+  string id = 1;
+}
+
+message GetResponse {
+  Todo item = 1;
+}
+
+message ListRequest {
+  int32 limit = 1;
+  bool not_completed = 2;
+}
+
+message ListResponse {
+  repeated Todo items = 1;
+}
+
+message DeleteRequest {
+  string id = 1;
+}
+
+message DeleteResponse {}
+
+message UpdateRequest {
+  Todo item = 1;
+}
+
+message UpdateResponse {}
+
+message UpdateBulkRequest {
+  repeated Todo items = 1;
+}
+
+message UpdateBulkResponse {}

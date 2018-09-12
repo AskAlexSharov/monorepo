@@ -5,6 +5,7 @@ require (
 	github.com/buger/jsonparser v0.0.0-20180910192245-6acdf747ae99 // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fatih/structs v1.0.0
 	github.com/globalsign/mgo v0.0.0-20180905125535-1ca0a4f7cbcb
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.2.0
@@ -15,7 +16,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.5.0
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mongodb/mongo-go-driver v0.0.13
-	github.com/nizsheanez/monorepo/todo/sdk v1.2.1
 	github.com/nizsheanez/monorepo/todo/sdk/v2 v2.2.1
 	github.com/onsi/gomega v1.4.2 // indirect
 	github.com/opentracing/opentracing-go v1.0.2
@@ -37,6 +37,7 @@ require (
 	go.uber.org/atomic v1.3.2 // indirect
 	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b // indirect
 	golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3
+	google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8
 	google.golang.org/grpc v1.15.0
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect

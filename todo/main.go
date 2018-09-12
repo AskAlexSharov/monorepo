@@ -11,8 +11,8 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	grpc_runtime "github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/nizsheanez/monorepo/todo/api/todo/v2"
 	"github.com/nizsheanez/monorepo/todo/model"
-	"github.com/nizsheanez/monorepo/todo/sdk/v2"
 	"github.com/nizsheanez/monorepo/todo/service"
 	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
@@ -96,7 +96,7 @@ func start(c *cli.Context) {
 
 		// todo service
 		todoService := &service.TodoService{Model: &model.TodoModel{Collection: todoCollection}}
-		todo_sdk.RegisterTodoServiceServer(server, todoService)
+		todo.RegisterTodoServiceServer(server, todoService)
 
 		// ... another services ...
 	}
@@ -125,7 +125,7 @@ func start(c *cli.Context) {
 			logger.Fatalf("Couldn't contact grpc server: " + err.Error())
 		}
 
-		err = todo_sdk.RegisterTodoServiceHandler(context.Background(), mux, conn)
+		err = todo.RegisterTodoServiceHandler(context.Background(), mux, conn)
 		if err != nil {
 			logger.Fatalf("Cannot serve http api, " + err.Error())
 		}
