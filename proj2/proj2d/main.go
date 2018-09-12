@@ -18,8 +18,7 @@ import (
 )
 
 var (
-	grpcAddr = flag.String("grpc.addr", "localhost:8002", "Address for gRPC server")
-)
+	grpcAddr = flag.String("grpc.addr", "localhost:8002", "Address for gRPC server")	)
 
 func main() {
 	//root := context.Background()
