@@ -18,7 +18,8 @@ import (
 )
 
 var (
-	grpcAddr = flag.String("grpc.addr", "localhost:8002", "Address for gRPC server")	)
+	grpcAddr = flag.String("grpc.addr", "localhost:8002", "Address for gRPC server")
+)
 
 func main() {
 	//root := context.Background()
@@ -34,8 +35,8 @@ func main() {
 
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoApi.ListTodo(context.Background(), &todo.ListTodoRequest{}))
-	fmt.Println(todoApiV1.ListTodo(context.Background(), &todoV1.ListTodoRequest{}))
+	fmt.Println(todoApi.List(context.Background(), &todo.ListRequest{}))
+	fmt.Println(todoApiV1.List(context.Background(), &todoV1.ListRequest{}))
 
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }

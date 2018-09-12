@@ -95,12 +95,16 @@ github.com/nizsheanez/monorepo/todo/client v1.1.2 h1:LPiR8f+Y2MXY9TVVj0VE2CElSfh
 github.com/nizsheanez/monorepo/todo/client v1.1.2/go.mod h1:3Uehau0j5f8bMGk2sD/8zJwghK0jQj79809KBlv+zrc=
 github.com/nizsheanez/monorepo/todo/client v1.1.3 h1:8lEP7ZxinvY87+J9Ar2yzRpVruXGg8mIGTtyZo5kJBA=
 github.com/nizsheanez/monorepo/todo/client v1.1.3/go.mod h1:3Uehau0j5f8bMGk2sD/8zJwghK0jQj79809KBlv+zrc=
+github.com/nizsheanez/monorepo/todo/client v1.1.5 h1:hWuoTHLM6jtfOzWUq2pj5ic7umUgHsmEn1ZoRTXXPA8=
+github.com/nizsheanez/monorepo/todo/client v1.1.5/go.mod h1:3Uehau0j5f8bMGk2sD/8zJwghK0jQj79809KBlv+zrc=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.0 h1:k4AJHAe40+eq6dy7Qv2mYJ528UZfwKjFZkFgUjCfZs4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.0/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.1 h1:MQkuU1xLrfK3p3Hv+bXxezM6jmWKLGQkMuSDwhwTKSs=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.1/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.3 h1:eN1LB8DmhCPitPBSNCix5OV1TeJTRPiiRsrPwxwm/Tg=
 github.com/nizsheanez/monorepo/todo/client/v2 v2.1.3/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
+github.com/nizsheanez/monorepo/todo/client/v2 v2.1.5 h1:/d87NAihvw6qKTpzJul+3aKutNS9KcH95NoZy4W5NLc=
+github.com/nizsheanez/monorepo/todo/client/v2 v2.1.5/go.mod h1:j49U34/BhAiitwll7n4fnopyDKbRid65jj+wa5NB8s4=
 github.com/nizsheanez/monorepo/todo/projects v1.0.1 h1:nkbN0SHZku9YKw9eRchduZP54LnmcZk+HiAbVvIYPqA=
 github.com/nizsheanez/monorepo/todo/projects v1.0.1/go.mod h1:lj6APVn+cpmMslGmn0eiethzFVFLdG6xvpM8oblzEq0=
 github.com/nizsheanez/monorepo/todo/projects v1.0.3 h1:xO+Ar9CCCbT71ite4yE+43nG2BjKPfdMO8+h+eS4zoo=
