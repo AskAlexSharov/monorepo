@@ -28,7 +28,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	todoV1 "github.com/nizsheanez/monorepo/todo/client"
 	todo "github.com/nizsheanez/monorepo/todo/client/v2"
 )
 
@@ -120,7 +119,7 @@ func start(c *cli.Context) {
 	db.CreateTable(&todo.Todo{}, nil)
 
 	// Register Todo service, prometheus and HTTP service handler
-	//api.RegisterTodoServiceServer(server, &todo.Service{DB: db})
+	//todo.RegisterTodoServiceServer(server, &Service{DB: db})
 	grpc_prometheus.Register(server)
 
 	go func() {
@@ -138,7 +137,7 @@ func start(c *cli.Context) {
 	}
 
 	mux := grpc_runtime.NewServeMux()
-	err = api.RegisterTodoServiceHandler(context.Background(), mux, conn)
+	err = todo.RegisterTodoServiceHandler(context.Background(), mux, conn)
 	if err != nil {
 		panic("Cannot serve http api")
 	}
