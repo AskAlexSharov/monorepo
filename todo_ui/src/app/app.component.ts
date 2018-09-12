@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import * as A from './../../../todo_ui/api/todo/v2/TodoServiceClientPb';
-import {CreateRequest, CreateResponse} from "../../../todo_ui/api/todo/v2/todo_pb";
+import {TodoServiceClient} from './../../../todo_ui/api/todo/v2/TodoServiceClientPb';
+import {CreateRequest, CreateResponse} from '../../../todo_ui/api/todo/v2/todo_pb';
+import * as grpcWeb from 'grpc-web';
 
 @Component({
   selector: 'app-root',
@@ -24,10 +25,10 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-        const client = new A.TodoServiceClient("127.0.0.1:2345", {}, {});
-        request = new CreateRequest();
+        const client = new TodoServiceClient("127.0.0.1:2345", {}, {});
+        let request = new CreateRequest();
         request.setItem({
-
+            "a": 1
         });
         client.create(request, null, (err: grpcWeb.Error, response: CreateResponse) => void {
 
