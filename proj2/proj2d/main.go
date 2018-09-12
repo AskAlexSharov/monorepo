@@ -13,7 +13,7 @@ import (
 	"time"
 
 	//"github.com/nizsheanez/monorepo/todo/projects"
-	todo "github.com/nizsheanez/monorepo/todo/v1"
+	todo "github.com/nizsheanez/monorepo/todo/client"
 )
 
 var (
