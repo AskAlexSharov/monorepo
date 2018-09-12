@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/nizsheanez/monorepo/todo/projects"
-	"github.com/nizsheanez/monorepo/todo/todo"
+	//"github.com/nizsheanez/monorepo/todo/projects"
+	//"github.com/nizsheanez/monorepo/todo/todo"
 	"log"
 
 	//"github.com/sony/gobreaker"
@@ -13,7 +13,7 @@ import (
 	"time"
 
 	//"github.com/nizsheanez/monorepo/todo/projects"
-	"github.com/nizsheanez/monorepo/todo/v1"
+	"github.com/nizsheanez/monorepo/todo/v2"
 )
 
 var (
@@ -29,9 +29,9 @@ func main() {
 	}
 	defer conn.Close()
 
-	todoApi := todo.NewApiClient(conn)
+	todoApi := v1.NewApiClient(conn)
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoApi.List(context.Background(), &todo.ListRequest{}))
+	fmt.Println(todoApi.List(context.Background(), &v1.ListRequest{}))
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }

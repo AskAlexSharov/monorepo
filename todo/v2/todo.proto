@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package todo.v1;
+package todo.v2;
 
 option go_package = "todo";
 
@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 service TodoService {
   rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {
     option (google.api.http) ={
-			post: "/v1/todo"
+			post: "/v2/todo"
 			body: "item"
 		};
   }
@@ -18,39 +18,39 @@ service TodoService {
   // Bulk version of CreateTodo
   rpc CreateTodos(CreateTodosRequest) returns (CreateTodosResponse) {
     option (google.api.http) ={
-			post: "/v1/todo/bulk"
+			post: "/v2/todo/bulk"
 			body: "*"
 		};
   }
 
   rpc GetTodo(GetTodoRequest) returns (GetTodoResponse) {
     option (google.api.http) ={
-			get: "/v1/todo/{id}"
+			get: "/v2/todo/{id}"
 		};
   }
 
   rpc ListTodo(ListTodoRequest) returns (ListTodoResponse) {
     option (google.api.http) ={
-			get: "/v1/todo"
+			get: "/v2/todo"
 		};
   }
 
   rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {
     option (google.api.http) ={
-			delete: "/v1/todo/{id}"
+			delete: "/v2/todo/{id}"
 		};
   }
 
   rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {
     option (google.api.http) ={
-			put: "/v1/todo"
+			put: "/v2/todo"
 			body: "item"
 		};
   }
 
   rpc UpdateTodos(UpdateTodosRequest) returns (UpdateTodosResponse) {
     option (google.api.http) ={
-			put: "/v1/todo/bulk"
+			put: "/v2/todo/bulk"
 			body: "*"
 		};
   }

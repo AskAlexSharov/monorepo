@@ -11,7 +11,7 @@ COMMANDS=protoc-gen-gogotodo
 DESTDIR=/usr/local
 
 
-#protoc -I /usr/local/include -I . -I $GOPATH/src -I $GOPATH/src/github.com/golang/protobuf -I $GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I ./v1 todo.proto --go_out=plugins=grpc:v1
+#protoc -I /usr/local/include -I . -I $GOPATH/src -I $GOPATH/src/github.com/golang/protobuf -I $GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I ./v2 todo.proto --go_out=plugins=grpc:v2
 
 #github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 #github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
