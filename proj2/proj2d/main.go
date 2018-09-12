@@ -28,12 +28,12 @@ func main() {
 	}
 	defer conn.Close()
 
-	todoService := todo_client.NewTodoServiceClient(conn)
+	todoService := todo.NewTodoServiceClient(conn)
 	todoServiceV1 := todoV1.NewTodoServiceClient(conn)
 
 	//projectsApi := projects.NewApiClient(conn)
 
-	fmt.Println(todoService.List(context.Background(), &todo_client.ListRequest{}))
+	fmt.Println(todoService.List(context.Background(), &todo.ListRequest{}))
 	fmt.Println(todoServiceV1.List(context.Background(), &todoV1.ListRequest{}))
 
 	//projectsApi.List(context.Background(), &projects.ListRequest{})

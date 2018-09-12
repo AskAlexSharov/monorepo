@@ -27,8 +27,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	todo "github.com/nizsheanez/monorepo/todo/client/v2"
 )
 
 func main() {

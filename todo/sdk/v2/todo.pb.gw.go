@@ -2,11 +2,11 @@
 // source: todo.proto
 
 /*
-Package todo is a reverse proxy.
+Package todo_sdk is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package todo
+package todo_sdk
 
 import (
 	"io"
@@ -396,19 +396,19 @@ func RegisterTodoServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_TodoService_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "todo"}, ""))
+	pattern_TodoService_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v2", "todo"}, ""))
 
-	pattern_TodoService_CreateBulk_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "todo", "bulk"}, ""))
+	pattern_TodoService_CreateBulk_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v2", "todo", "bulk"}, ""))
 
-	pattern_TodoService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "todo", "id"}, ""))
+	pattern_TodoService_Get_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v2", "todo", "id"}, ""))
 
-	pattern_TodoService_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "todo"}, ""))
+	pattern_TodoService_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v2", "todo"}, ""))
 
-	pattern_TodoService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "todo", "id"}, ""))
+	pattern_TodoService_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v2", "todo", "id"}, ""))
 
-	pattern_TodoService_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "todo"}, ""))
+	pattern_TodoService_Update_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v2", "todo"}, ""))
 
-	pattern_TodoService_UpdateBulk_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "todo", "bulk"}, ""))
+	pattern_TodoService_UpdateBulk_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v2", "todo", "bulk"}, ""))
 )
 
 var (

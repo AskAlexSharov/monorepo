@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/todo/client
+module github.com/nizsheanez/monorepo/todo/sdk
 
 require (
 	github.com/golang/protobuf v1.2.0

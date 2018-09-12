@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package todo.client.v1;
+package todo.sdk.v2;
 
-option go_package = "todo";
+option go_package = "todo_sdk";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
@@ -10,7 +10,7 @@ import "google/protobuf/timestamp.proto";
 service TodoService {
   rpc Create (CreateRequest) returns (CreateResponse) {
     option (google.api.http) ={
-			post: "/v1/todo"
+			post: "/v2/todo"
 			body: "item"
 		};
   }
@@ -18,39 +18,39 @@ service TodoService {
   // Bulk version of CreateTodo
   rpc CreateBulk (CreateBulkRequest) returns (CreateBulkResponse) {
     option (google.api.http) ={
-			post: "/v1/todo/bulk"
+			post: "/v2/todo/bulk"
 			body: "*"
 		};
   }
 
   rpc Get (GetRequest) returns (GetResponse) {
     option (google.api.http) ={
-			get: "/v1/todo/{id}"
+			get: "/v2/todo/{id}"
 		};
   }
 
   rpc List (ListRequest) returns (ListResponse) {
     option (google.api.http) ={
-			get: "/v1/todo"
+			get: "/v2/todo"
 		};
   }
 
   rpc Delete (DeleteRequest) returns (DeleteResponse) {
     option (google.api.http) ={
-			delete: "/v1/todo/{id}"
+			delete: "/v2/todo/{id}"
 		};
   }
 
   rpc Update (UpdateRequest) returns (UpdateResponse) {
     option (google.api.http) ={
-			put: "/v1/todo"
+			put: "/v2/todo"
 			body: "item"
 		};
   }
 
   rpc UpdateBulk (UpdateBulkRequest) returns (UpdateBulkResponse) {
     option (google.api.http) ={
-			put: "/v1/todo/bulk"
+			put: "/v2/todo/bulk"
 			body: "*"
 		};
   }
