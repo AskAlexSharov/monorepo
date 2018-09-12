@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package todo.client.v1;
+package todo.client.v2;
 
 option go_package = "client";
 
@@ -8,49 +8,49 @@ import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service TodoService {
-  rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {
+  rpc Create (CreateRequest) returns (CreateResponse) {
     option (google.api.http) ={
-			post: "/v1/todo"
+			post: "/v2/todo"
 			body: "item"
 		};
   }
 
   // Bulk version of CreateTodo
-  rpc CreateTodos(CreateTodosRequest) returns (CreateTodosResponse) {
+  rpc CreateBulk (CreateBulkRequest) returns (CreateBulkResponse) {
     option (google.api.http) ={
-			post: "/v1/todo/bulk"
+			post: "/v2/todo/bulk"
 			body: "*"
 		};
   }
 
-  rpc GetTodo(GetTodoRequest) returns (GetTodoResponse) {
+  rpc Get (GetRequest) returns (GetResponse) {
     option (google.api.http) ={
-			get: "/v1/todo/{id}"
+			get: "/v2/todo/{id}"
 		};
   }
 
-  rpc ListTodo(ListTodoRequest) returns (ListTodoResponse) {
+  rpc List (ListRequest) returns (ListResponse) {
     option (google.api.http) ={
-			get: "/v1/todo"
+			get: "/v2/todo"
 		};
   }
 
-  rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {
+  rpc Delete (DeleteRequest) returns (DeleteResponse) {
     option (google.api.http) ={
-			delete: "/v1/todo/{id}"
+			delete: "/v2/todo/{id}"
 		};
   }
 
-  rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {
+  rpc Update (UpdateRequest) returns (UpdateResponse) {
     option (google.api.http) ={
-			put: "/v1/todo"
+			put: "/v2/todo"
 			body: "item"
 		};
   }
 
-  rpc UpdateTodos(UpdateTodosRequest) returns (UpdateTodosResponse) {
+  rpc UpdateBulk (UpdateBulkRequest) returns (UpdateBulkResponse) {
     option (google.api.http) ={
-			put: "/v1/todo/bulk"
+			put: "/v2/todo/bulk"
 			body: "*"
 		};
   }
@@ -71,53 +71,53 @@ message Todo {
   google.protobuf.Timestamp updated_at = 6;
 }
 
-message CreateTodoRequest {
+message CreateRequest {
   Todo item = 1;
 }
 
-message CreateTodoResponse {
+message CreateResponse {
   string id = 1;
 }
 
-message CreateTodosRequest {
+message CreateBulkRequest {
   repeated Todo items = 1;
 }
 
-message CreateTodosResponse {
+message CreateBulkResponse {
   repeated string ids = 1;
 }
 
-message GetTodoRequest {
+message GetRequest {
   string id = 1;
 }
 
-message GetTodoResponse {
+message GetResponse {
   Todo item = 1;
 }
 
-message ListTodoRequest {
+message ListRequest {
   int32 limit = 1;
   bool not_completed = 2;
 }
 
-message ListTodoResponse {
+message ListResponse {
   repeated Todo items = 1;
 }
 
-message DeleteTodoRequest {
+message DeleteRequest {
   string id = 1;
 }
 
-message DeleteTodoResponse {}
+message DeleteResponse {}
 
-message UpdateTodoRequest {
+message UpdateRequest {
   Todo item = 1;
 }
 
-message UpdateTodoResponse {}
+message UpdateResponse {}
 
-message UpdateTodosRequest {
+message UpdateBulkRequest {
   repeated Todo items = 1;
 }
 
-message UpdateTodosResponse {}
+message UpdateBulkResponse {}
