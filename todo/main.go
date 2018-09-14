@@ -132,6 +132,7 @@ func start(c *cli.Context) {
 	}
 
 	grpc_prometheus.Register(server)
+	log.Println("Starting HTTP service... " + httpAddr(c))
 	http.ListenAndServe(httpAddr(c), mux)
 }
 

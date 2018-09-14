@@ -31,8 +31,6 @@ func main() {
 	}
 	defer conn.Close()
 
-	strings.Replace()
-	strings.NewReplacer()
 	todoService := todo.NewTodoServiceClient(conn)
 	todoServiceV1 := todo_sdk_v1.NewTodoServiceClient(conn)
 

@@ -9,7 +9,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "ver": "ng version"
   },
   "private": true,
   "dependencies": {
@@ -22,12 +23,16 @@
     "@angular/router": "~6.1.1",
     "@capacitor/cli": "^1.0.0-beta.7",
     "@capacitor/core": "^1.0.0-beta.7",
-    "@ionic-native/core": "5.0.0-beta.15",
-    "@ionic-native/splash-screen": "5.0.0-beta.15",
-    "@ionic-native/status-bar": "5.0.0-beta.15",
-    "@ionic/angular": "4.0.0-beta.8",
+    "@ionic-native/core": "^5.0.0-beta.15",
+    "@ionic-native/splash-screen": "^5.0.0-beta.15",
+    "@ionic-native/status-bar": "^5.0.0-beta.15",
+    "@ionic/angular": "^4.0.0-beta.8",
+    "@ionic/core": "^4.0.0-beta.8",
     "core-js": "^2.5.3",
+    "google-proto-files": "^0.16.1",
+    "grpc-web": "^0.4.0",
     "rxjs": "6.3.2",
+    "ts-protoc-gen": "^0.7.7-pre.67e0c93",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -56,6 +61,6 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
-  },
+  }
   "description": "An Ionic project"
 }
