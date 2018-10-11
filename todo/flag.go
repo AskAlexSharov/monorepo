@@ -5,6 +5,12 @@ import (
 )
 
 var commonFlags = []cli.Flag{
+	cli.StringFlag{
+		Name:   "env",
+		Usage:  "aws, gcp, local",
+		EnvVar: "env",
+		Value:  "local",
+	},
 	cli.UintFlag{
 		Name:   "bind-http",
 		Usage:  "bind address for HTTP",
