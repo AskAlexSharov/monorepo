@@ -1,14 +1,20 @@
 {
-  "$schema": "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "defaultProject": "app",
+  "newProjectRoot": "projects",
   "projects": {
     "app": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineTemplate": true,
+          "styleext": "scss"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -57,7 +63,14 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
             }
           }
         },
@@ -116,7 +129,7 @@
           }
         },
         "ionic-cordova-build": {
-          "builder": "@ionic/ng-toolkit:cordova-build",
+          "builder": "@ionic/angular-toolkit:cordova-build",
           "options": {
             "browserTarget": "app:build"
           },
@@ -127,7 +140,7 @@
           }
         },
         "ionic-cordova-serve": {
-          "builder": "@ionic/ng-toolkit:cordova-serve",
+          "builder": "@ionic/angular-toolkit:cordova-serve",
           "options": {
             "cordovaBuildTarget": "app:ionic-cordova-build",
             "devServerTarget": "app:serve"
@@ -144,12 +157,18 @@
     "app-e2e": {
       "root": "e2e/",
       "projectType": "application",
+      "prefix": "",
       "architect": {
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "app:serve:production"
+            }
           }
         },
         "lint": {
@@ -165,13 +184,13 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/schematics-angular"
+    "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {
-    "@ionic/schematics-angular:component": {
+    "@ionic/angular-toolkit:component": {
       "styleext": "scss"
     },
-    "@ionic/schematics-angular:page": {
+    "@ionic/angular-toolkit:page": {
       "styleext": "scss"
     }
   }

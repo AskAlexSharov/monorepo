@@ -49,7 +49,7 @@ func setupLocal(ctx *cli.Context) (*application, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	application2 := newApplication(server2, session, entry, server3, variable)
+	application2 := newApplication(server2, entry, session, server3, variable)
 	return application2, func() {
 		cleanup2()
 		cleanup()

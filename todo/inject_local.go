@@ -24,17 +24,16 @@ import (
 )
 
 func setupLocal(ctx *cli.Context) (*application, func(), error) {
-	wire.Build(
+	panic(wire.Build(
 		wire.InterfaceValue(new(requestlog.Logger), requestlog.Logger(nil)),
 		wire.InterfaceValue(new(trace.Exporter), trace.Exporter(nil)),
 		server.Set,
 		applicationSet,
 		localLogrus,
 		localGrpc,
-		localDb,
 		localRuntimeVar,
-	)
-	return nil, nil, nil
+		localDb,
+	))
 }
 
 func localDb(ctx *cli.Context) (*mgo.Session, error) {
