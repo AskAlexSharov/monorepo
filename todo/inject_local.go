@@ -75,7 +75,7 @@ func localGrpc(ctx *cli.Context, logger *logrus.Entry) *grpc.Server {
 // localRuntimeVar is a Wire provider function that returns the Message of the
 // Day variable based on a local file.
 func localRuntimeVar(ctx *cli.Context) (*runtimevar.Variable, func(), error) {
-	v, err := filevar.NewVariable("message_of_the_day", runtimevar.StringDecoder, &filevar.WatchOptions{
+	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
 		WaitTime: time.Minute,
 	})
 	if err != nil {

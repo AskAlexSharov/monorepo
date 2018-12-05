@@ -4,18 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/nizsheanez/monorepo/todo/api/todo/v2"
-	"github.com/nizsheanez/monorepo/todo/sdk/v2"
 	"log"
-	"strings"
-
-	//"github.com/sony/gobreaker"
-	"google.golang.org/grpc"
 	"time"
 
-	//"github.com/nizsheanez/monorepo/todo/projects"
-	"github.com/nizsheanez/monorepo/proj2/api/todo/v1"
 	todo_sdk_v1 "github.com/nizsheanez/monorepo/proj2/api/todo/v1"
+	"github.com/nizsheanez/monorepo/proj2/api/todo/v2"
+	"google.golang.org/grpc"
 )
 
 var (

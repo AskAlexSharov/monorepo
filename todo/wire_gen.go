@@ -85,8 +85,8 @@ func localGrpc(ctx *cli.Context, logger *logrus.Entry) *grpc.Server {
 }
 
 func localRuntimeVar(ctx *cli.Context) (*runtimevar.Variable, func(), error) {
-	v, err := filevar.NewVariable("message_of_the_day", runtimevar.StringDecoder, &filevar.WatchOptions{
-		WaitTime: time.Minute,
+	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
+		WaitDuration: time.Minute,
 	})
 	if err != nil {
 		return nil, nil, err
