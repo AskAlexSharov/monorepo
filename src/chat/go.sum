@@ -38,6 +38,8 @@ github.com/stretchr/testify v1.2.2 h1:bSDNvY7ZPG5RlJ8otE/7V6gMiyenm9RtJ7IUVIAoJ1
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/urfave/cli v1.20.0 h1:fDqGv3UG/4jbVl/QkFwEdddtEDjh/5Ov6X+0B/3bPaw=
 github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
+github.com/vektah/dataloaden v0.0.0-20181105192535-484aef20ae77 h1:Wl1uO8mCWtZ1hwXS8E1Ce7wOtV/mj3XWXz8xDf+3O5A=
+github.com/vektah/dataloaden v0.0.0-20181105192535-484aef20ae77/go.mod h1:Vq7o2cKqFgL9FZa7UBg7YGhXtZ77pXQK207AGegn438=
 github.com/vektah/gqlparser v1.0.0 h1:sa/YH/EczjNUFh/ww8ZOsEt/Z7bUMVHI/PH8U0a+taM=
 github.com/vektah/gqlparser v1.0.0/go.mod h1:K4QdSSpS2XiHHwzb18kWh3iBljB8rLC8okGXsnQy3Nc=
 golang.org/x/net v0.0.0-20181213202711-891ebc4b82d6 h1:gT0Y6H7hbVPUtvtk0YGxMXPgN+p8fYlqWkgJeUCZcaQ=

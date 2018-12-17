@@ -1,3 +1,0 @@
-models:
-  Chatroom:
-    model: github.com/nizsheanez/monorepo/src/chat.Chatroom

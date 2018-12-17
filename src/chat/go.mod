@@ -21,6 +21,7 @@ require (
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd // indirect
 	github.com/stretchr/testify v1.2.2
 	github.com/urfave/cli v1.20.0 // indirect
+	github.com/vektah/dataloaden v0.0.0-20181105192535-484aef20ae77 // indirect
 	github.com/vektah/gqlparser v1.0.0
 	golang.org/x/net v0.0.0-20181213202711-891ebc4b82d6 // indirect
 	golang.org/x/tools v0.0.0-20181213210126-fe2443f7b950 // indirect

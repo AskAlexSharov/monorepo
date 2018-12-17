@@ -1,0 +1,10 @@
+schema:
+  - "./*.graphql"
+
+models:
+  Chatroom:
+    model: github.com/nizsheanez/monorepo/src/chat.Chatroom
+  User:
+    model: github.com/nizsheanez/monorepo/src/chat.User
+  Message:
+    model: github.com/nizsheanez/monorepo/src/chat.Message

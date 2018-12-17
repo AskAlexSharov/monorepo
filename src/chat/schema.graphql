@@ -8,7 +8,7 @@ type Message {
     text: String!
     createdBy: String!
     createdAt: Time!
-    author: User!
+    user: User!
 }
 
 type User {
@@ -17,6 +17,7 @@ type User {
 
 type Query {
     room(name:String!): Chatroom
+    user(name:String!): User
 }
 
 type Mutation {

@@ -29,19 +29,26 @@ func main() {
 	})
 
 	http.Handle("/", handler.Playground("Todo", "/query"))
-	http.Handle("/query", c.Handler(
-		handler.GraphQL(chat.NewExecutableSchema(chat.New()),
-			handler.WebsocketUpgrader(websocket.Upgrader{
-				CheckOrigin: func(r *http.Request) bool {
-					return true
-				},
-			}),
-			handler.ErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
-				fmt.Println(e)
-				return graphql.DefaultErrorPresenter(ctx, e)
-			}),
-		),
-	))
+	loadersMiddleware := func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			r = r.WithContext(chat.UserLoaderToCtx(r.Context(), chat.NewUserLoader()))
+			next.ServeHTTP(w, r)
+		})
+	}
+
+	gqlHandler := handler.GraphQL(chat.NewExecutableSchema(chat.New()),
+		handler.WebsocketUpgrader(websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+		}),
+		handler.ErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
+			fmt.Println(e)
+			return graphql.DefaultErrorPresenter(ctx, e)
+		}),
+	)
+
+	http.Handle("/query", c.Handler(loadersMiddleware(gqlHandler)))
 	log.Fatal(http.ListenAndServe(":8085", nil))
 }
 

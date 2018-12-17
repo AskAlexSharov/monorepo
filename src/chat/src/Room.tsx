@@ -34,7 +34,7 @@ function useRoom(channelName: string): [any, Boolean, any, Function] {
         query: gql`
             query Room($channel: String!) {
                 room(name: $channel) {
-                    messages { id text createdBy createdAt author { name } }
+                    messages { id text createdBy createdAt user { name } }
                 }
             }
         `,
@@ -78,6 +78,9 @@ function useSubscription(channelName: string, setRoom: Function): void {
                   id
                   text
                   createdBy
+                  user {
+                      name
+                  }
               }
           }
       `,

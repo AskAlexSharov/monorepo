@@ -51,7 +51,7 @@ type ComplexityRoot struct {
 		Text      func(childComplexity int) int
 		CreatedBy func(childComplexity int) int
 		CreatedAt func(childComplexity int) int
-		Author    func(childComplexity int) int
+		User      func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -60,6 +60,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Room func(childComplexity int, name string) int
+		User func(childComplexity int, name string) int
 	}
 
 	Subscription struct {
@@ -76,6 +77,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Room(ctx context.Context, name string) (*Chatroom, error)
+	User(ctx context.Context, name string) (*User, error)
 }
 type SubscriptionResolver interface {
 	MessageAdded(ctx context.Context, roomName string) (<-chan Message, error)
@@ -115,6 +117,21 @@ func field_Mutation_post_args(rawArgs map[string]interface{}) (map[string]interf
 }
 
 func field_Query_room_args(rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		var err error
+		arg0, err = graphql.UnmarshalString(tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	return args, nil
+
+}
+
+func field_Query_user_args(rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	args := map[string]interface{}{}
 	var arg0 string
 	if tmp, ok := rawArgs["name"]; ok {
@@ -244,12 +261,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Message.CreatedAt(childComplexity), true
 
-	case "Message.author":
-		if e.complexity.Message.Author == nil {
+	case "Message.user":
+		if e.complexity.Message.User == nil {
 			break
 		}
 
-		return e.complexity.Message.Author(childComplexity), true
+		return e.complexity.Message.User(childComplexity), true
 
 	case "Mutation.post":
 		if e.complexity.Mutation.Post == nil {
@@ -274,6 +291,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Room(childComplexity, args["name"].(string)), true
+
+	case "Query.user":
+		if e.complexity.Query.User == nil {
+			break
+		}
+
+		args, err := field_Query_user_args(rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.User(childComplexity, args["name"].(string)), true
 
 	case "Subscription.messageAdded":
 		if e.complexity.Subscription.MessageAdded == nil {
@@ -375,6 +404,7 @@ var chatroomImplementors = []string{"Chatroom"}
 func (ec *executionContext) _Chatroom(ctx context.Context, sel ast.SelectionSet, obj *Chatroom) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, chatroomImplementors)
 
+	var wg sync.WaitGroup
 	out := graphql.NewOrderedMap(len(fields))
 	invalid := false
 	for i, field := range fields {
@@ -389,15 +419,19 @@ func (ec *executionContext) _Chatroom(ctx context.Context, sel ast.SelectionSet,
 				invalid = true
 			}
 		case "messages":
-			out.Values[i] = ec._Chatroom_messages(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalid = true
-			}
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Chatroom_messages(ctx, field, obj)
+				if out.Values[i] == graphql.Null {
+					invalid = true
+				}
+				wg.Done()
+			}(i, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
-
+	wg.Wait()
 	if invalid {
 		return graphql.Null
 	}
@@ -444,7 +478,7 @@ func (ec *executionContext) _Chatroom_messages(ctx context.Context, field graphq
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Messages, nil
+		return obj.Messages(ctx)
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -497,6 +531,7 @@ var messageImplementors = []string{"Message"}
 func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, obj *Message) graphql.Marshaler {
 	fields := graphql.CollectFields(ctx, sel, messageImplementors)
 
+	var wg sync.WaitGroup
 	out := graphql.NewOrderedMap(len(fields))
 	invalid := false
 	for i, field := range fields {
@@ -525,16 +560,20 @@ func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalid = true
 			}
-		case "author":
-			out.Values[i] = ec._Message_author(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalid = true
-			}
+		case "user":
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Message_user(ctx, field, obj)
+				if out.Values[i] == graphql.Null {
+					invalid = true
+				}
+				wg.Done()
+			}(i, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
-
+	wg.Wait()
 	if invalid {
 		return graphql.Null
 	}
@@ -650,7 +689,7 @@ func (ec *executionContext) _Message_createdAt(ctx context.Context, field graphq
 }
 
 // nolint: vetshadow
-func (ec *executionContext) _Message_author(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
+func (ec *executionContext) _Message_user(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
 	rctx := &graphql.ResolverContext{
@@ -662,7 +701,7 @@ func (ec *executionContext) _Message_author(ctx context.Context, field graphql.C
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Author, nil
+		return obj.User(ctx)
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -670,11 +709,18 @@ func (ec *executionContext) _Message_author(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(User)
+	res := resTmp.(*User)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
 
-	return ec._User(ctx, field.Selections, &res)
+	if res == nil {
+		if !ec.HasError(rctx) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+
+	return ec._User(ctx, field.Selections, res)
 }
 
 var mutationImplementors = []string{"Mutation"}
@@ -770,6 +816,12 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				out.Values[i] = ec._Query_room(ctx, field)
 				wg.Done()
 			}(i, field)
+		case "user":
+			wg.Add(1)
+			go func(i int, field graphql.CollectedField) {
+				out.Values[i] = ec._Query_user(ctx, field)
+				wg.Done()
+			}(i, field)
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -818,6 +870,41 @@ func (ec *executionContext) _Query_room(ctx context.Context, field graphql.Colle
 	}
 
 	return ec._Chatroom(ctx, field.Selections, res)
+}
+
+// nolint: vetshadow
+func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) graphql.Marshaler {
+	ctx = ec.Tracer.StartFieldExecution(ctx, field)
+	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := field_Query_user_args(rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	rctx := &graphql.ResolverContext{
+		Object: "Query",
+		Args:   args,
+		Field:  field,
+	}
+	ctx = graphql.WithResolverContext(ctx, rctx)
+	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
+	resTmp := ec.FieldMiddleware(ctx, nil, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().User(rctx, args["name"].(string))
+	})
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*User)
+	rctx.Result = res
+	ctx = ec.Tracer.StartFieldChildExecution(ctx)
+
+	if res == nil {
+		return graphql.Null
+	}
+
+	return ec._User(ctx, field.Selections, res)
 }
 
 // nolint: vetshadow
@@ -2478,7 +2565,7 @@ type Message {
     text: String!
     createdBy: String!
     createdAt: Time!
-    author: User!
+    user: User!
 }
 
 type User {
@@ -2487,6 +2574,7 @@ type User {
 
 type Query {
     room(name:String!): Chatroom
+    user(name:String!): User
 }
 
 type Mutation {

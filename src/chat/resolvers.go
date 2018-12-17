@@ -36,8 +36,19 @@ func New() Config {
 
 type Chatroom struct {
 	Name      string
-	Messages  []Message
+	messages  []Message
 	Observers map[string]chan Message
+}
+
+type Message struct {
+	ID        string    `json:"id"`
+	Text      string    `json:"text"`
+	CreatedBy string    `json:"createdBy"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type User struct {
+	Name string `json:"name"`
 }
 
 type mutationResolver struct{ *resolver }
@@ -58,7 +69,7 @@ func (r *mutationResolver) Post(ctx context.Context, text string, username strin
 		CreatedBy: username,
 	}
 
-	room.Messages = append(room.Messages, message)
+	room.messages = append(room.messages, message)
 	r.mu.Lock()
 	for _, observer := range room.Observers {
 		observer <- message
@@ -68,6 +79,10 @@ func (r *mutationResolver) Post(ctx context.Context, text string, username strin
 }
 
 type queryResolver struct{ *resolver }
+
+func (r *Message) User(ctx context.Context) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
+}
 
 func (r *queryResolver) Room(ctx context.Context, name string) (*Chatroom, error) {
 	r.mu.Lock()
@@ -79,6 +94,14 @@ func (r *queryResolver) Room(ctx context.Context, name string) (*Chatroom, error
 	r.mu.Unlock()
 
 	return room, nil
+}
+
+func (r *queryResolver) User(ctx context.Context, name string) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(name)
+}
+
+func (r *Chatroom) Messages(ctx context.Context) ([]Message, error) {
+	return r.messages, nil
 }
 
 type subscriptionResolver struct{ *resolver }
