@@ -1,0 +1,13 @@
+projects:
+  chat:
+    schemaPath: ././schema.graphql
+    extensions:
+      endpoints:
+        default:
+          url: 'http://localhost:8085/query'
+          subscription: 'ws://localhost:8085/query'
+      codegen:
+        generator: typegen
+        language: typescript
+        output:
+          typings: typings.ts
