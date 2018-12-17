@@ -11,10 +11,10 @@ import {getMainDefinition} from 'apollo-utilities';
 import * as serviceWorker from './serviceWorker';
 
 const wsLink = new WebSocketLink({
-    uri: `ws://localhost:8085/query`,
-    options: {
-        reconnect: true
-    }
+  uri: `ws://localhost:8085/query`,
+  options: {
+    reconnect: true
+  }
 });
 
 const httpLink = new HttpLink({uri: 'http://localhost:8085/query'});
@@ -22,37 +22,38 @@ const httpLink = new HttpLink({uri: 'http://localhost:8085/query'});
 
 // depending on what kind of operation is being sent
 interface Definintion {
-    kind: string;
-    operation?: string;
+  kind: string;
+  operation?: string;
 };
 
 const link = split(
-    ({ query }) => {
-        const { kind, operation }: Definintion = getMainDefinition(query);
-        return kind === 'OperationDefinition' && operation === 'subscription';
-    },
-    wsLink,
-    httpLink,
+  ({query}) => {
+    const {kind, operation}: Definintion = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  httpLink,
 );
 
 const apolloClient = new ApolloClient({
-    link: link,
-    cache: new InMemoryCache(),
+  link: link,
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
 });
 
 if (module['hot']) {
-    module['hot'].accept('./App', () => {
-        const NextApp = require('./App').default;
-        render(<NextApp />);
-    })
+  module['hot'].accept('./App', () => {
+    const NextApp = require('./App').default;
+    render(<NextApp />);
+  })
 }
 
 function render(component: any) {
-    ReactDOM.render(
-        <ApolloHooksProvider client={apolloClient}>
-            {component}
-        </ApolloHooksProvider>
-        , document.getElementById('root'));
+  ReactDOM.render(
+    <ApolloHooksProvider client={apolloClient}>
+      {component}
+    </ApolloHooksProvider>
+    , document.getElementById('root'));
 }
 
 render(<App />);

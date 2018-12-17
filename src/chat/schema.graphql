@@ -8,6 +8,11 @@ type Message {
     text: String!
     createdBy: String!
     createdAt: Time!
+    author: User!
+}
+
+type User {
+    name: String!
 }
 
 type Query {

@@ -1,6 +1,10 @@
 package main
 
 import (
+	"context"
+	"fmt"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/vektah/gqlparser/gqlerror"
 	"log"
 	"net/http"
 	"net/url"
@@ -25,13 +29,19 @@ func main() {
 	})
 
 	http.Handle("/", handler.Playground("Todo", "/query"))
-	http.Handle("/query", c.Handler(handler.GraphQL(chat.NewExecutableSchema(chat.New()),
-		handler.WebsocketUpgrader(websocket.Upgrader{
-			CheckOrigin: func(r *http.Request) bool {
-				return true
-			},
-		}))),
-	)
+	http.Handle("/query", c.Handler(
+		handler.GraphQL(chat.NewExecutableSchema(chat.New()),
+			handler.WebsocketUpgrader(websocket.Upgrader{
+				CheckOrigin: func(r *http.Request) bool {
+					return true
+				},
+			}),
+			handler.ErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
+				fmt.Println(e)
+				return graphql.DefaultErrorPresenter(ctx, e)
+			}),
+		),
+	))
 	log.Fatal(http.ListenAndServe(":8085", nil))
 }
 
