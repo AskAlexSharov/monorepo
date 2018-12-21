@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func BenchmarkEnterRoom(t *testing.B) {
+func BenchmarkEnterRoom(b *testing.B) {
 	srv := httptest.NewServer(GetHandlerWithMiddlewares())
 	c := client.New(srv.URL)
 
@@ -22,18 +22,16 @@ func BenchmarkEnterRoom(t *testing.B) {
 	}`, &respPost)
 
 	req := `query {
-			room(name: "default") {
-				messages { 
-                    id text createdBy createdAt 
-                    user { name } 
-                    user2 { name } 
-                    user3 { name } 
-                    user4 { name } 
-                	user5 { name } 
-            	}
-        	}
-        }`
-	for i := 0; i < t.N; i++ {
+		room(name: "default") {
+			messages { 
+        		id text createdBy createdAt 
+                user { name } 
+            }
+        }
+    }`
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
 		var resp interface{}
 		c.MustPost(req, &resp)
 	}
