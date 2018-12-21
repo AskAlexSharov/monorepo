@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/vektah/gqlparser/gqlerror"
 	"log"
@@ -23,15 +22,22 @@ import (
 func main() {
 	startAppdashServer()
 
+	http.Handle("/", handler.Playground("Todo", "/query"))
+
+	http.Handle("/query", GetHandlerWithMiddlewares())
+	log.Fatal(http.ListenAndServe(":8085", nil))
+}
+
+func GetHandlerWithMiddlewares() http.Handler {
+
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
 	})
-
-	http.Handle("/", handler.Playground("Todo", "/query"))
+	userLoader := chat.NewUserLoader()
 	loadersMiddleware := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			r = r.WithContext(chat.UserLoaderToCtx(r.Context(), chat.NewUserLoader()))
+			r = r.WithContext(chat.UserLoaderToCtx(r.Context(), userLoader))
 			next.ServeHTTP(w, r)
 		})
 	}
@@ -43,13 +49,11 @@ func main() {
 			},
 		}),
 		handler.ErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
-			fmt.Println(e)
 			return graphql.DefaultErrorPresenter(ctx, e)
 		}),
 	)
 
-	http.Handle("/query", c.Handler(loadersMiddleware(gqlHandler)))
-	log.Fatal(http.ListenAndServe(":8085", nil))
+	return c.Handler(loadersMiddleware(gqlHandler))
 }
 
 func startAppdashServer() opentracing.Tracer {

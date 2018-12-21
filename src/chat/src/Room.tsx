@@ -34,7 +34,14 @@ function useRoom(channelName: string): [any, Boolean, any, Function] {
         query: gql`
             query Room($channel: String!) {
                 room(name: $channel) {
-                    messages { id text createdBy createdAt user { name } }
+                    messages { 
+                        id text createdBy createdAt 
+                        user { name } 
+                        user2 { name } 
+                        user3 { name } 
+                        user4 { name } 
+                        user5 { name } 
+                    }
                 }
             }
         `,

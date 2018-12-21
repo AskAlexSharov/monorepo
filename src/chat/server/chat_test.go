@@ -1,4 +1,4 @@
-package chat
+package main
 
 import (
 	"net/http/httptest"
@@ -6,13 +6,41 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/client"
-	"github.com/99designs/gqlgen/handler"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+func BenchmarkEnterRoom(t *testing.B) {
+	srv := httptest.NewServer(GetHandlerWithMiddlewares())
+	c := client.New(srv.URL)
+
+	var respPost interface{}
+	c.MustPost(`mutation f{	
+		a:post(text:"hello", roomName:"default", username:"alex") { id }
+		b:post(text:"hello", roomName:"default", username:"alex") { id }
+		c:post(text:"hello", roomName:"default", username:"alex") { id }
+	}`, &respPost)
+
+	req := `query {
+			room(name: "default") {
+				messages { 
+                    id text createdBy createdAt 
+                    user { name } 
+                    user2 { name } 
+                    user3 { name } 
+                    user4 { name } 
+                	user5 { name } 
+            	}
+        	}
+        }`
+	for i := 0; i < t.N; i++ {
+		var resp interface{}
+		c.MustPost(req, &resp)
+	}
+}
+
 func TestChatSubscriptions(t *testing.T) {
-	srv := httptest.NewServer(handler.GraphQL(NewExecutableSchema(New())))
+	srv := httptest.NewServer(GetHandlerWithMiddlewares())
 	c := client.New(srv.URL)
 
 	sub := c.Websocket(`subscription { messageAdded(roomName:"#gophers") { text createdBy } }`)

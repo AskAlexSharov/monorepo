@@ -54,13 +54,11 @@ type User struct {
 type mutationResolver struct{ *resolver }
 
 func (r *mutationResolver) Post(ctx context.Context, text string, username string, roomName string) (Message, error) {
-	r.mu.Lock()
 	room := r.Rooms[roomName]
 	if room == nil {
 		room = &Chatroom{Name: roomName, Observers: map[string]chan Message{}}
 		r.Rooms[roomName] = room
 	}
-	r.mu.Unlock()
 
 	message := Message{
 		ID:        randString(8),
@@ -70,17 +68,31 @@ func (r *mutationResolver) Post(ctx context.Context, text string, username strin
 	}
 
 	room.messages = append(room.messages, message)
-	r.mu.Lock()
 	for _, observer := range room.Observers {
 		observer <- message
 	}
-	r.mu.Unlock()
 	return message, nil
 }
 
 type queryResolver struct{ *resolver }
 
 func (r *Message) User(ctx context.Context) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
+}
+
+func (r *Message) User2(ctx context.Context) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
+}
+
+func (r *Message) User3(ctx context.Context) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
+}
+
+func (r *Message) User4(ctx context.Context) (*User, error) {
+	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
+}
+
+func (r *Message) User5(ctx context.Context) (*User, error) {
 	return UserLoaderFromCtx(ctx).Load(r.CreatedBy)
 }
 
