@@ -19,3 +19,6 @@ gen:
 		--swagger_out=logtostderr=true:./api/todo/v1 \
 		--grpc-gateway_out=logtostderr=true:./api/todo/v1 \
 		todo.proto
+	
+	go generate ./...
+

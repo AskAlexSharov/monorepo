@@ -5,10 +5,12 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
-	todo_sdk_v1 "github.com/nizsheanez/monorepo/proj2/api/todo/v1"
-	"github.com/nizsheanez/monorepo/proj2/api/todo/v2"
+	"github.com/hashicorp/logutils"
+	todo_sdk_v1 "github.com/nizsheanez/monorepo/src/proj2/api/todo/v1"
+	"github.com/nizsheanez/monorepo/src/proj2/api/todo/v2"
 	"google.golang.org/grpc"
 )
 
@@ -18,6 +20,13 @@ var (
 
 func main() {
 	//root := context.Background()
+
+	filter := &logutils.LevelFilter{
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
+		MinLevel: logutils.LogLevel("WARN"),
+		Writer:   os.Stderr,
+	}
+	log.SetOutput(filter)
 
 	conn, err := grpc.Dial(*grpcAddr, grpc.WithInsecure(), grpc.WithTimeout(time.Second))
 	if err != nil {

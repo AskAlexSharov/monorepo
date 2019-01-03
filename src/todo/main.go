@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
-	"strings"
 	"sync"
 
 	"github.com/globalsign/mgo"
@@ -16,30 +15,29 @@ import (
 	"github.com/google/go-cloud/runtimevar"
 	"github.com/google/go-cloud/server"
 	"github.com/google/go-cloud/wire"
-	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	"github.com/grpc-ecosystem/go-grpc-prometheus"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	grpc_runtime "github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/nizsheanez/monorepo/todo/api/todo/v2"
-	"github.com/nizsheanez/monorepo/todo/model"
-	"github.com/nizsheanez/monorepo/todo/service"
+	"github.com/hashicorp/logutils"
+	"github.com/nizsheanez/monorepo/src/todo/api/todo/v2"
+	"github.com/nizsheanez/monorepo/src/todo/model"
+	"github.com/nizsheanez/monorepo/src/todo/service"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"go.opencensus.io/trace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
-	//"github.com/uber/jaeger-client-go/config"
-	//"github.com/uber/jaeger-client-go/rpcmetrics"
-	//prometheus_metrics "github.com/uber/jaeger-lib/metrics/prometheus"
 )
 
 func main() {
-	for _, e := range os.Environ() {
-		pair := strings.Split(e, "=")
-		fmt.Println(pair)
+	filter := &logutils.LevelFilter{
+		Levels:   []logutils.LogLevel{"DEBUG", "WARN", "ERROR"},
+		MinLevel: logutils.LogLevel("WARN"),
+		Writer:   os.Stderr,
 	}
+	log.SetOutput(filter)
 
 	app := cli.NewApp()
 	app.Name = path.Base(os.Args[0])
@@ -57,7 +55,7 @@ func main() {
 var panicHandler = grpc_recovery.RecoveryHandlerFunc(func(p interface{}) error {
 	buf := make([]byte, 1<<16)
 	runtime.Stack(buf, true)
-	log.Errorf("panic recovered: %+v", string(buf))
+	log.Printf("panic recovered: %+v", string(buf))
 	return status.Errorf(codes.Internal, "%s", p)
 })
 
@@ -89,7 +87,6 @@ func appHealthChecks(db *mgo.Session) ([]health.Checker, func()) {
 // the most recently read message of the day.
 type application struct {
 	srv        *server.Server
-	logger     *log.Entry
 	grpcServer *grpc.Server
 	db         *mgo.Session
 
@@ -101,13 +98,11 @@ type application struct {
 // newApplication creates a new application struct based on the backends
 func newApplication(
 	srv *server.Server,
-	logger *log.Entry,
 	db *mgo.Session,
 	grpcServer *grpc.Server,
 	motdVar *runtimevar.Variable) *application {
 	app := &application{
 		srv:        srv,
-		logger:     logger,
 		grpcServer: grpcServer,
 		db:         db,
 	}
@@ -173,14 +168,15 @@ func start(c *cli.Context) {
 	log.Println("Starting Grpc service... " + grpcAddr(c))
 	lis, err := net.Listen("tcp", grpcAddr(c))
 	if err != nil {
-		app.logger.Fatalf("Failed to listen: %v", grpcAddr(c))
+		log.Printf("Failed to listen: %v", grpcAddr(c))
+		panic(err)
 	}
 
 	go func() {
 		reflection.Register(app.grpcServer)
 		err := app.grpcServer.Serve(lis)
 		if err != nil {
-			app.logger.Fatalf(err.Error())
+			log.Print(err.Error())
 		}
 	}()
 
@@ -189,12 +185,12 @@ func start(c *cli.Context) {
 		// create grpc client, http gateway will use it
 		conn, err := grpc.Dial(grpcAddr(c), grpc.WithInsecure())
 		if err != nil {
-			app.logger.Fatalf("Couldn't contact grpc server: " + err.Error())
+			log.Printf("Couldn't contact grpc server: " + err.Error())
 		}
 
 		err = todo.RegisterTodoServiceHandler(context.Background(), mux, conn)
 		if err != nil {
-			app.logger.Fatalf("Cannot serve http api, " + err.Error())
+			log.Printf("Cannot serve http api, " + err.Error())
 		}
 	}
 
@@ -215,47 +211,10 @@ func mongoAddr(ctx *cli.Context) string {
 	return ctx.String("db-host") + ":" + ctx.String("db-port")
 }
 
-func jaegerAddr(c *cli.Context) string {
-	return c.String("jaeger-host") + ":" + c.String("jaeger-port")
-}
-
-//func initTracer(c *cli.Context, logger *log.Entry) (opentracing.Tracer, io.Closer, error) {
-//	// Prometheus monitoring
-//	metrics := prometheus_metrics.New()
-//
-//	// Jaeger tracing
-//	cfg := config.Configuration{
-//		ServiceName: "todo",
-//		Sampler: &config.SamplerConfig{
-//			Type:  "const",
-//			Param: c.Float64("jaeger-sampler"),
-//		},
-//		Reporter: &config.ReporterConfig{
-//			LocalAgentHostPort: jaegerAddr(c),
-//		},
-//	}
-//	return cfg.NewTracer(
-//		config.Logger(jaegerLoggerAdapter{logger}),
-//		config.Observer(rpcmetrics.NewObserver(metrics.Namespace("todo", nil), rpcmetrics.DefaultNameNormalizer)),
-//	)
-//}
-
 func initPrometheus(c *cli.Context) {
 	go func() {
 		mux := http.NewServeMux()
 		mux.Handle("/metrics", promhttp.Handler())
 		http.ListenAndServe(c.String("bind-prometheus-http"), mux)
 	}()
-}
-
-type jaegerLoggerAdapter struct {
-	logger *log.Entry
-}
-
-func (l jaegerLoggerAdapter) Error(msg string) {
-	l.logger.Error(msg)
-}
-
-func (l jaegerLoggerAdapter) Infof(msg string, args ...interface{}) {
-	l.logger.Info(fmt.Sprintf(msg, args...))
 }

@@ -6,22 +6,20 @@
 package main
 
 import (
-	mgo "github.com/globalsign/mgo"
-	requestlog "github.com/google/go-cloud/requestlog"
-	runtimevar "github.com/google/go-cloud/runtimevar"
-	filevar "github.com/google/go-cloud/runtimevar/filevar"
-	server "github.com/google/go-cloud/server"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
-	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
-	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	errors "github.com/pkg/errors"
-	logrus "github.com/sirupsen/logrus"
-	cli "github.com/urfave/cli"
-	trace "go.opencensus.io/trace"
-	grpc "google.golang.org/grpc"
-	time "time"
+	"github.com/globalsign/mgo"
+	"github.com/google/go-cloud/requestlog"
+	"github.com/google/go-cloud/runtimevar"
+	"github.com/google/go-cloud/runtimevar/filevar"
+	"github.com/google/go-cloud/server"
+	"github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	"github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/pkg/errors"
+	"github.com/urfave/cli"
+	"go.opencensus.io/trace"
+	"google.golang.org/grpc"
+	"time"
 )
 
 // Injectors from inject_local.go:
@@ -35,30 +33,32 @@ func setupLocal(ctx *cli.Context) (*application, func(), error) {
 	v, cleanup := appHealthChecks(session)
 	exporter := _wireExporterValue
 	sampler := trace.AlwaysSample()
+	defaultDriver := _wireDefaultDriverValue
 	options := &server.Options{
 		RequestLogger:         logger,
 		HealthChecks:          v,
 		TraceExporter:         exporter,
 		DefaultSamplingPolicy: sampler,
+		Driver:                defaultDriver,
 	}
-	server2 := server.New(options)
-	entry := localLogrus(ctx)
-	server3 := localGrpc(ctx, entry)
+	serverServer := server.New(options)
+	grpcServer := localGrpc(ctx)
 	variable, cleanup2, err := localRuntimeVar(ctx)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	application2 := newApplication(server2, entry, session, server3, variable)
-	return application2, func() {
+	mainApplication := newApplication(serverServer, session, grpcServer, variable)
+	return mainApplication, func() {
 		cleanup2()
 		cleanup()
 	}, nil
 }
 
 var (
-	_wireLoggerValue   = requestlog.Logger(nil)
-	_wireExporterValue = trace.Exporter(nil)
+	_wireLoggerValue        = requestlog.Logger(nil)
+	_wireExporterValue      = trace.Exporter(nil)
+	_wireDefaultDriverValue = &server.DefaultDriver{}
 )
 
 // inject_local.go:
@@ -72,18 +72,13 @@ func localDb(ctx *cli.Context) (*mgo.Session, error) {
 	return sess, nil
 }
 
-func localLogrus(ctx *cli.Context) *logrus.Entry {
-	logger := logrus.NewEntry(logrus.New())
-	grpc_logrus.ReplaceGrpcLogger(logger)
-	logrus.SetLevel(logrus.DebugLevel)
-
-	return logger
+func localGrpc(ctx *cli.Context) *grpc.Server {
+	return grpc.NewServer(grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)), grpc_prometheus.StreamServerInterceptor, grpc_recovery.StreamServerInterceptor(grpc_recovery.WithRecoveryHandler(panicHandler)))), grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)), grpc_prometheus.UnaryServerInterceptor, grpc_recovery.UnaryServerInterceptor(grpc_recovery.WithRecoveryHandler(panicHandler)))),
+	)
 }
 
-func localGrpc(ctx *cli.Context, logger *logrus.Entry) *grpc.Server {
-	return grpc.NewServer(grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)), grpc_prometheus.StreamServerInterceptor, grpc_logrus.StreamServerInterceptor(logger), grpc_recovery.StreamServerInterceptor(grpc_recovery.WithRecoveryHandler(panicHandler)))), grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)), grpc_prometheus.UnaryServerInterceptor, grpc_logrus.UnaryServerInterceptor(logger), grpc_recovery.UnaryServerInterceptor(grpc_recovery.WithRecoveryHandler(panicHandler)))))
-}
-
+// localRuntimeVar is a Wire provider function that returns the Message of the
+// Day variable based on a local file.
 func localRuntimeVar(ctx *cli.Context) (*runtimevar.Variable, func(), error) {
 	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
 		WaitDuration: time.Minute,
