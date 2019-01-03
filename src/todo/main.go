@@ -17,9 +17,8 @@ import (
 	"github.com/google/go-cloud/wire"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	grpc_runtime "github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/hashicorp/logutils"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo/v2"
+	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"github.com/nizsheanez/monorepo/src/todo/model"
 	"github.com/nizsheanez/monorepo/src/todo/service"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -128,12 +127,6 @@ func (app *application) watchMOTDVar(v *runtimevar.Variable) {
 }
 
 func start(c *cli.Context) {
-	//tracer, closer, err := initTracer(c, logger)
-	//if err != nil {
-	//	logger.Fatalf("Cannot initialize Jaeger Tracer %s", err)
-	//}
-	//defer closer.Close()
-
 	var app *application
 	var cleanup func()
 	var err error
@@ -180,23 +173,12 @@ func start(c *cli.Context) {
 		}
 	}()
 
-	mux := grpc_runtime.NewServeMux()
-	{
-		// create grpc client, http gateway will use it
-		conn, err := grpc.Dial(grpcAddr(c), grpc.WithInsecure())
-		if err != nil {
-			log.Printf("Couldn't contact grpc server: " + err.Error())
-		}
-
-		err = todo.RegisterTodoServiceHandler(context.Background(), mux, conn)
-		if err != nil {
-			log.Printf("Cannot serve http api, " + err.Error())
-		}
-	}
+	opts := []grpc.ServerOption{}
+	app.grpcServer = grpc.NewServer(opts...)
 
 	grpc_prometheus.Register(app.grpcServer)
 	log.Println("Starting HTTP service... " + httpAddr(c))
-	http.ListenAndServe(httpAddr(c), mux)
+	app.grpcServer.Serve(lis)
 }
 
 func grpcAddr(c *cli.Context) string {

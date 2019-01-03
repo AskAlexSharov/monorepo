@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/fatih/structs"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo/v2"
+	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"github.com/nizsheanez/monorepo/src/todo/model"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

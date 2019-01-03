@@ -6,7 +6,7 @@ import (
 
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo/v2"
+	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

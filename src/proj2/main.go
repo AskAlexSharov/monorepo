@@ -9,8 +9,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/logutils"
-	todo_sdk_v1 "github.com/nizsheanez/monorepo/src/proj2/api/todo/v1"
-	"github.com/nizsheanez/monorepo/src/proj2/api/todo/v2"
+	"github.com/nizsheanez/monorepo/src/proj2/api/todo"
 	"google.golang.org/grpc"
 )
 
@@ -35,12 +34,10 @@ func main() {
 	defer conn.Close()
 
 	todoService := todo.NewTodoServiceClient(conn)
-	todoServiceV1 := todo_sdk_v1.NewTodoServiceClient(conn)
 
 	//projectsApi := projects.NewApiClient(conn)
 
 	fmt.Println(todoService.List(context.Background(), &todo.ListRequest{}))
-	fmt.Println(todoServiceV1.List(context.Background(), &todo_sdk_v1.ListRequest{}))
 
 	//projectsApi.List(context.Background(), &projects.ListRequest{})
 }
