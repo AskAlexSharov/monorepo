@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"runtime"
-	"strings"
 	"syscall"
 
 	"github.com/hashicorp/logutils"
@@ -31,11 +30,6 @@ type Opts struct {
 var revision = "unknown"
 
 func init() {
-	for _, e := range os.Environ() {
-		pair := strings.Split(e, "=")
-		fmt.Println(pair)
-	}
-
 	// catch SIGQUIT and print stack traces
 	sigChan := make(chan os.Signal)
 	go func() {

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"github.com/globalsign/mgo"
 	"github.com/google/go-cloud/health"
 	"github.com/google/go-cloud/runtimevar"
 	"github.com/google/go-cloud/runtimevar/filevar"
@@ -10,12 +9,12 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"github.com/nizsheanez/monorepo/src/todo/model"
 	"github.com/nizsheanez/monorepo/src/todo/service"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/urfave/cli"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -78,7 +77,7 @@ type serverApp struct {
 	*ServerCommand
 	grpcPortListener net.Listener
 	grpcServer       *grpc.Server
-	db               *mgo.Session
+	db               *mongo.Client
 
 	terminated chan struct{}
 }
@@ -116,7 +115,10 @@ func (a *serverApp) run(ctx context.Context) error {
 		log.Print("[INFO] shutdown initiated")
 		a.grpcServer.GracefulStop()
 		if a.db != nil {
-			a.db.Close()
+			err := a.db.Disconnect(ctx)
+			if err != nil {
+				log.Printf("[WARN] $%s\n", err)
+			}
 		}
 		log.Print("[INFO] shutdown completed")
 	}()
@@ -152,7 +154,7 @@ func (*fakeHealthChecker) CheckHealth() error {
 // appHealthChecks returns a health check for the database. This will signal
 // to Kubernetes or other orchestrators that the server should not receive
 // traffic until the server is able to connect to its database.
-func appHealthChecks(db *mgo.Session) ([]health.Checker, func()) {
+func appHealthChecks(db *mongo.Client) ([]health.Checker, func()) {
 	//dbCheck := sqlhealth.New(db)
 	c := &fakeHealthChecker{}
 	list := []health.Checker{c}
@@ -161,8 +163,8 @@ func appHealthChecks(db *mgo.Session) ([]health.Checker, func()) {
 	}
 }
 
-func (s *ServerCommand) makeDb() (*mgo.Session, error) {
-	sess, err := mgo.Dial(s.Mongo.URL)
+func (s *ServerCommand) makeDb() (*mongo.Client, error) {
+	sess, err := mongo.NewClient(s.Mongo.URL)
 	if err != nil {
 		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
 	}
@@ -188,7 +190,7 @@ func (s *ServerCommand) makeGrpc() *grpc.Server {
 
 // localRuntimeVar is a Wire provider function that returns the Message of the
 // Day variable based on a local file.
-func (s *ServerCommand) makeRuntimeVar(ctx *cli.Context) (*runtimevar.Variable, func(), error) {
+func (s *ServerCommand) makeRuntimeVar() (*runtimevar.Variable, func(), error) {
 	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
 		WaitDuration: time.Minute,
 	})
@@ -210,7 +212,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	{ // register rpc services
 
-		todoCollection := db.DB(s.Mongo.DB).C("todo")
+		todoCollection := db.Database(s.Mongo.DB).Collection("todo")
 
 		// todo service
 		todoService := &service.TodoService{Model: &model.TodoModel{Collection: todoCollection}}

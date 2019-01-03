@@ -5,8 +5,8 @@ COPY . .
 RUN GO111MODULE=on go mod vendor
 RUN GOOS=linux GO111MODULE=on go build -o /app .
 
-FROM umputun/baseimage:app-latest
-COPY --from=0 /app /app
+FROM github.com/grpc-ecosystem/go-grpc-middleware:app-latest
+COPY --from=build-backend /app /app
 
 RUN chown -R app:app /app
 
