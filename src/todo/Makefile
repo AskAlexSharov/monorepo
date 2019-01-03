@@ -8,7 +8,5 @@ gen:
 		--go_out=plugins=grpc:./api/todo \
 		todo.proto
 
-    GO111MODULE=on wire
-
 build:
-	docker build -t "nizsheanez/todo:1.0.0" -t nizsheanez/todo:latest .
+	docker build -t "nizsheanez/todo" .
