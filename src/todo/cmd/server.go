@@ -10,6 +10,8 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/mongodb/mongo-go-driver/mongo"
+	"github.com/mongodb/mongo-go-driver/mongo/options"
+	"github.com/mongodb/mongo-go-driver/mongo/readpref"
 	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"github.com/nizsheanez/monorepo/src/todo/model"
 	"github.com/nizsheanez/monorepo/src/todo/service"
@@ -98,10 +100,9 @@ func (s *ServerCommand) Execute(args []string) error {
 
 	app, err := s.newServerApp()
 	if err != nil {
-		log.Fatalf("[ERROR] failed to setup application, %+v", err)
+		return err
 	}
 	if err = app.run(ctx); err != nil {
-		log.Printf("[WARN] server terminated with error %+v", err)
 		return err
 	}
 	log.Printf("[INFO] terminated")
@@ -123,8 +124,8 @@ func (a *serverApp) run(ctx context.Context) error {
 		log.Print("[INFO] shutdown completed")
 	}()
 
+	reflection.Register(a.grpcServer)
 	go func() {
-		reflection.Register(a.grpcServer)
 		err := a.grpcServer.Serve(a.grpcPortListener)
 		if err != nil {
 			log.Print(err.Error())
@@ -164,11 +165,29 @@ func appHealthChecks(db *mongo.Client) ([]health.Checker, func()) {
 }
 
 func (s *ServerCommand) makeDb() (*mongo.Client, error) {
-	sess, err := mongo.NewClient(s.Mongo.URL)
+	clientOptions := options.Client().
+		SetConnectTimeout(10 * time.Second).
+		SetServerSelectionTimeout(10 * time.Second).
+		SetSocketTimeout(10 * time.Second)
+
+	client, err := mongo.NewClientWithOptions(s.Mongo.URL, clientOptions)
 	if err != nil {
 		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
 	}
-	return sess, nil
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	if err := client.Connect(ctx); err != nil {
+		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+	}
+
+	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Ping(ctx, readpref.Primary())
+	if err := client.Connect(ctx); err != nil {
+		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+	}
+
+	log.Println("connected")
+	return client, nil
 }
 
 func (s *ServerCommand) makeGrpc() *grpc.Server {
@@ -226,8 +245,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	lis, err := s.makeGrpcPortListener()
 	if err != nil {
-		log.Printf("Failed to listen: %v", s.Grpc.Url)
-		panic(err)
+		return nil, errors.Wrap(err, "Failed to listen: "+s.Grpc.Url)
 	}
 
 	return &serverApp{
