@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import gql from 'graphql-tag';
-import {useApolloClient, useMutation} from "react-apollo-hooks";
+import { useApolloClient, useMutation } from "react-apollo-hooks";
 import PrintError from "./ErrorPrinter";
 
 type Msg = {
@@ -21,35 +21,29 @@ function useRoom(channelName: string): [any, Boolean, any, Function] {
   const [error, setError] = useState<Error | undefined>(undefined);
 
   function handleQueryResult(result: any) {
-    console.log("b", result)
     setLoading(false);
     setRoom(result.data.room);
   }
 
   useEffect(() => {
+    if (!client) return;
 
-      if (!client) return;
-
-      client.query({
-        query: gql`
+    client.query({
+      query: gql`
             query Room($channel: String!) {
                 room(name: $channel) {
                     messages { 
                         id text createdBy createdAt 
                         user { name } 
-                        user2 { name } 
-                        user3 { name } 
-                        user4 { name } 
-                        user5 { name } 
                     }
                 }
             }
         `,
-        variables: {
-          channel: channelName,
-        },
-      }).then(handleQueryResult).catch(setError);
-    },
+      variables: {
+        channel: channelName,
+      },
+    }).then(handleQueryResult).catch(setError);
+  },
     [channelName, client]
   );
 
@@ -60,11 +54,10 @@ function useSubscription(channelName: string, setRoom: Function): void {
   const client = useApolloClient();
 
   function handleNewMessage(result: any) {
-    console.log("a", result);
     if (!result.data) {
       return
     }
-    setRoom((room: any) => {
+    setRoom((room: Room) => {
       const newMessage = result.data.messageAdded;
       if (room.messages.find((msg: any) => msg.id === newMessage.id)) {
         return room

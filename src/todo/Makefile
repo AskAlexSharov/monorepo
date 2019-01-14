@@ -1,5 +1,6 @@
 PROTOBUF=$(GOPATH)/src/github.com/golang/protobuf
-protoInclude=:$(GOOGLE_APIS):$(PROTOBUF):/usr/local/include
+protoInclude=$(GOOGLE_APIS):$(PROTOBUF):/usr/local/include
+GO_CACHE=$(GOCACHE)
 
 gen:
 	rm -rf ./api/*
@@ -9,4 +10,5 @@ gen:
 		todo.proto
 
 build:
-	docker build -t "nizsheanez/todo" .
+	ls $(GO_CACHE)
+	docker build --build-arg host_cache=$(GO_CACHE) -t "nizsheanez/todo" .

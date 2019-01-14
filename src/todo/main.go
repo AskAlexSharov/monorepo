@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/hashicorp/logutils"
-	"github.com/jessevdk/go-flags"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/nizsheanez/monorepo/src/todo/cmd"
 )
 

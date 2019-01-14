@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/pkg/errors"
 )
 
@@ -51,9 +50,11 @@ func responseError(resp *http.Response) error {
 }
 
 // mkdir -p for all dirs
-func makeDirs(dirs ...string) (err error) {
+func makeDirs(dirs ...string) error {
 	for _, dir := range dirs {
-		err = multierror.Append(err, os.MkdirAll(dir, 0700))
+		if err := os.MkdirAll(dir, 0700); err != nil { // If path is already a directory, MkdirAll does nothing
+			return errors.Wrapf(err, "can't make directory %s", dir)
+		}
 	}
-	return err
+	return nil
 }
