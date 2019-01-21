@@ -3,8 +3,8 @@ version: '2'
 services:
     todo:
         build: .
-        image: nizsheanez/todo:latest
-        container_name: "nizsheanez"
+        image: AskAlexSharov/todo:latest
+        container_name: "AskAlexSharov"
         hostname: "localhost"
         restart: always
 

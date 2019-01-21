@@ -6,9 +6,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

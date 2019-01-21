@@ -1,5 +1,5 @@
-//go:generate dataloaden -keys string github.com/nizsheanez/monorepo/src/chat.User
-//go:generate dataloaden -keys string github.com/nizsheanez/monorepo/src/chat.Message
+//go:generate dataloaden -keys string github.com/AskAlexSharov/monorepo/src/chat.User
+//go:generate dataloaden -keys string github.com/AskAlexSharov/monorepo/src/chat.Message
 
 package chat
 

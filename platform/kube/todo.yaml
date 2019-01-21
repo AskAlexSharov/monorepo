@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: todo
-        image: nizsheanez/todo:1.0.0
+        image: AskAlexSharov/todo:1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80

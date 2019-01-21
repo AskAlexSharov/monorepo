@@ -8,9 +8,9 @@ import (
 	"runtime"
 	"syscall"
 
+	"github.com/AskAlexSharov/monorepo/src/todo/cmd"
 	"github.com/hashicorp/logutils"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/nizsheanez/monorepo/src/todo/cmd"
 )
 
 // Opts with all cli commands and flags

@@ -3,8 +3,8 @@ schema:
 
 models:
   Chatroom:
-    model: github.com/nizsheanez/monorepo/src/chat.Chatroom
+    model: github.com/AskAlexSharov/monorepo/src/chat.Chatroom
   User:
-    model: github.com/nizsheanez/monorepo/src/chat.User
+    model: github.com/AskAlexSharov/monorepo/src/chat.User
   Message:
-    model: github.com/nizsheanez/monorepo/src/chat.Message
+    model: github.com/AskAlexSharov/monorepo/src/chat.Message

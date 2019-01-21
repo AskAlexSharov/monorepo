@@ -11,8 +11,8 @@ import (
 	"github.com/vektah/gqlparser/gqlerror"
 
 	"github.com/99designs/gqlgen/handler"
+	"github.com/AskAlexSharov/monorepo/src/chat"
 	"github.com/gorilla/websocket"
-	"github.com/nizsheanez/monorepo/src/chat"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/rs/cors"
 	"sourcegraph.com/sourcegraph/appdash"

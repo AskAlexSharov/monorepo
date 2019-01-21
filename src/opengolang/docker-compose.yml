@@ -40,7 +40,7 @@ services:
 
     opengolang:
         build: .
-        image: nizsheanez/opengolang:latest
+        image: AskAlexSharov/opengolang:latest
         container_name: "opengolang"
         hostname: "localhost"
         restart: always

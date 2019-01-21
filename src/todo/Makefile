@@ -11,4 +11,4 @@ gen:
 
 build:
 	ls $(GO_CACHE)
-	docker build --build-arg host_cache=$(GO_CACHE) -t "nizsheanez/todo" .
+	docker build --build-arg host_cache=$(GO_CACHE) -t "AskAlexSharov/todo" .

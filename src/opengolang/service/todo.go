@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo"
-	"github.com/nizsheanez/monorepo/src/todo/model"
+	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
+	"github.com/AskAlexSharov/monorepo/src/todo/model"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

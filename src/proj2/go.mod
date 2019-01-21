@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/src/proj2
+module github.com/AskAlexSharov/monorepo/src/proj2
 
 require (
 	github.com/golang/mock v1.2.0 // indirect

@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/src/todo
+module github.com/AskAlexSharov/monorepo/src/todo
 
 require (
 	github.com/dgraph-io/dgo v0.0.0-20190110141328-c438f7dd6d92

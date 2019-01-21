@@ -11,5 +11,5 @@ GO_CACHE=$(GOCACHE)
 
 build:
 	ls $(GO_CACHE)
-	docker build --build-arg host_cache=$(GO_CACHE) -t "nizsheanez/opengolang" .
+	docker build --build-arg host_cache=$(GO_CACHE) -t "AskAlexSharov/opengolang" .
 

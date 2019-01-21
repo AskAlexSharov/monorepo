@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/src/todo
+module github.com/AskAlexSharov/monorepo/src/todo
 
 require (
 	contrib.go.opencensus.io/exporter/aws v0.0.0-20181029163544-2befc13012d0 // indirect

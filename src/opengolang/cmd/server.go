@@ -2,15 +2,15 @@ package cmd
 
 import (
 	"context"
+	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
+	"github.com/AskAlexSharov/monorepo/src/todo/model"
+	"github.com/AskAlexSharov/monorepo/src/todo/service"
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/nizsheanez/monorepo/src/todo/api/todo"
-	"github.com/nizsheanez/monorepo/src/todo/model"
-	"github.com/nizsheanez/monorepo/src/todo/service"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"

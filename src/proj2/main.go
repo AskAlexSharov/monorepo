@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/AskAlexSharov/monorepo/src/proj2/api/todo"
 	"github.com/hashicorp/logutils"
-	"github.com/nizsheanez/monorepo/src/proj2/api/todo"
 	"google.golang.org/grpc"
 )
 

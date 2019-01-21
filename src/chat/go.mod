@@ -1,4 +1,4 @@
-module github.com/nizsheanez/monorepo/src/chat
+module github.com/AskAlexSharov/monorepo/src/chat
 
 require (
 	github.com/99designs/gqlgen v0.7.1

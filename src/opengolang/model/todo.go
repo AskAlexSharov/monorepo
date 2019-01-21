@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/dgraph-io/dgo"
 
-	"github.com/nizsheanez/monorepo/src/todo/api/todo"
+	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -45,7 +45,7 @@ func (s TodoModel) List(ctx context.Context, req *todo.ListRequest) (*todo.ListR
 		return nil, status.Errorf(codes.Internal, "Could not insert item into the database: %s", err)
 	}
 	fmt.Printf("From Dgraph %+v\n", decode)
-	return  nil, nil
+	return nil, nil
 	//return &todo.ListResponse{Items: items}, nil
 }
 
@@ -68,7 +68,6 @@ func (s TodoModel) List(ctx context.Context, req *todo.ListRequest) (*todo.ListR
 //	}
 //	return nil
 //}
-
 
 //func (s TodoModel) RemoveById(ctx context.Context, id string) error {
 //	filter := bson.M{"_id": id}
