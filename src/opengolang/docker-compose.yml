@@ -1,0 +1,66 @@
+version: "3.2"
+services:
+    zero:
+        image: dgraph/dgraph:latest
+        volumes:
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
+        ports:
+            - 5080:5080
+            - 6080:6080
+        restart: on-failure
+        command: dgraph zero --my=zero:5080
+    dbalpha1:
+        image: dgraph/dgraph:latest
+        volumes:
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
+        ports:
+            - 8080:8080
+            - 9080:9080
+        restart: on-failure
+        command: dgraph alpha --my=dbalpha1:7080 --lru_mb=2048 --zero=zero:5080
+    ratel:
+        image: dgraph/dgraph:latest
+        volumes:
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
+        ports:
+            - 8000:8000
+        command: dgraph-ratel
+
+    opengolang:
+        build: .
+        image: nizsheanez/opengolang:latest
+        container_name: "opengolang"
+        hostname: "localhost"
+        restart: always
+
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "5"
+
+        # uncomment to expose directly (no proxy)
+        ports:
+            - 81:8080
+
+        environment:
+            - SECRET="asd"
+            - DGRAPH_URL=
+            - DEBUG=true
+            # - DEV_PASSWD=password # development mode, be careful!
+
+volumes:
+    dgraph:
+

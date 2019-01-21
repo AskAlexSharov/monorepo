@@ -52,10 +52,6 @@ type ComplexityRoot struct {
 		CreatedBy func(childComplexity int) int
 		CreatedAt func(childComplexity int) int
 		User      func(childComplexity int) int
-		User2     func(childComplexity int) int
-		User3     func(childComplexity int) int
-		User4     func(childComplexity int) int
-		User5     func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -271,34 +267,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Message.User(childComplexity), true
-
-	case "Message.user2":
-		if e.complexity.Message.User2 == nil {
-			break
-		}
-
-		return e.complexity.Message.User2(childComplexity), true
-
-	case "Message.user3":
-		if e.complexity.Message.User3 == nil {
-			break
-		}
-
-		return e.complexity.Message.User3(childComplexity), true
-
-	case "Message.user4":
-		if e.complexity.Message.User4 == nil {
-			break
-		}
-
-		return e.complexity.Message.User4(childComplexity), true
-
-	case "Message.user5":
-		if e.complexity.Message.User5 == nil {
-			break
-		}
-
-		return e.complexity.Message.User5(childComplexity), true
 
 	case "Mutation.post":
 		if e.complexity.Mutation.Post == nil {
@@ -601,42 +569,6 @@ func (ec *executionContext) _Message(ctx context.Context, sel ast.SelectionSet, 
 				}
 				wg.Done()
 			}(i, field)
-		case "user2":
-			wg.Add(1)
-			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Message_user2(ctx, field, obj)
-				if out.Values[i] == graphql.Null {
-					invalid = true
-				}
-				wg.Done()
-			}(i, field)
-		case "user3":
-			wg.Add(1)
-			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Message_user3(ctx, field, obj)
-				if out.Values[i] == graphql.Null {
-					invalid = true
-				}
-				wg.Done()
-			}(i, field)
-		case "user4":
-			wg.Add(1)
-			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Message_user4(ctx, field, obj)
-				if out.Values[i] == graphql.Null {
-					invalid = true
-				}
-				wg.Done()
-			}(i, field)
-		case "user5":
-			wg.Add(1)
-			go func(i int, field graphql.CollectedField) {
-				out.Values[i] = ec._Message_user5(ctx, field, obj)
-				if out.Values[i] == graphql.Null {
-					invalid = true
-				}
-				wg.Done()
-			}(i, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -770,146 +702,6 @@ func (ec *executionContext) _Message_user(ctx context.Context, field graphql.Col
 	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.User(ctx)
-	})
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*User)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-
-	if res == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-
-	return ec._User(ctx, field.Selections, res)
-}
-
-// nolint: vetshadow
-func (ec *executionContext) _Message_user2(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
-	rctx := &graphql.ResolverContext{
-		Object: "Message",
-		Args:   nil,
-		Field:  field,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.User2(ctx)
-	})
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*User)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-
-	if res == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-
-	return ec._User(ctx, field.Selections, res)
-}
-
-// nolint: vetshadow
-func (ec *executionContext) _Message_user3(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
-	rctx := &graphql.ResolverContext{
-		Object: "Message",
-		Args:   nil,
-		Field:  field,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.User3(ctx)
-	})
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*User)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-
-	if res == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-
-	return ec._User(ctx, field.Selections, res)
-}
-
-// nolint: vetshadow
-func (ec *executionContext) _Message_user4(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
-	rctx := &graphql.ResolverContext{
-		Object: "Message",
-		Args:   nil,
-		Field:  field,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.User4(ctx)
-	})
-	if resTmp == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*User)
-	rctx.Result = res
-	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-
-	if res == nil {
-		if !ec.HasError(rctx) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-
-	return ec._User(ctx, field.Selections, res)
-}
-
-// nolint: vetshadow
-func (ec *executionContext) _Message_user5(ctx context.Context, field graphql.CollectedField, obj *Message) graphql.Marshaler {
-	ctx = ec.Tracer.StartFieldExecution(ctx, field)
-	defer func() { ec.Tracer.EndFieldExecution(ctx) }()
-	rctx := &graphql.ResolverContext{
-		Object: "Message",
-		Args:   nil,
-		Field:  field,
-	}
-	ctx = graphql.WithResolverContext(ctx, rctx)
-	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
-	resTmp := ec.FieldMiddleware(ctx, obj, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.User5(ctx)
 	})
 	if resTmp == nil {
 		if !ec.HasError(rctx) {
@@ -2774,10 +2566,6 @@ type Message {
     createdBy: String!
     createdAt: Time!
     user: User!
-    user2: User!
-    user3: User!
-    user4: User!
-    user5: User!
 }
 
 type User {

@@ -2,25 +2,12 @@ package cmd
 
 import (
 	"context"
-	"log"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"runtime"
-	"syscall"
-	"time"
-
-	"gocloud.dev/health"
-	"gocloud.dev/runtimevar"
-	"gocloud.dev/runtimevar/filevar"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
-	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/mongodb/mongo-go-driver/mongo"
-	"github.com/mongodb/mongo-go-driver/mongo/options"
-	"github.com/mongodb/mongo-go-driver/mongo/readpref"
+	"github.com/dgraph-io/dgo"
+	"github.com/dgraph-io/dgo/protos/api"
+	"github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	"github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/nizsheanez/monorepo/src/todo/api/todo"
 	"github.com/nizsheanez/monorepo/src/todo/model"
 	"github.com/nizsheanez/monorepo/src/todo/service"
@@ -30,13 +17,19 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
+	"log"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"runtime"
+	"syscall"
 )
 
 // ServerCommand with command line flags and env
 type ServerCommand struct {
-	Avatar AvatarGroup `group:"avatar" namespace:"avatar" env-namespace:"AVATAR"`
 	Cache  CacheGroup  `group:"cache" namespace:"cache" env-namespace:"CACHE"`
-	Mongo  MongoGroup  `group:"mongo" namespace:"mongo" env-namespace:"MONGO"`
+	DGraph DGraphGroup `group:"dgraph" namespace:"dgraph" env-namespace:"DGRAPH"`
 	Grpc   GrpcGroup   `group:"grpc" namespace:"grpc" env-namespace:"GRPC"`
 
 	CommonOpts
@@ -45,18 +38,6 @@ type ServerCommand struct {
 // StoreGroup defines options group for store params
 type GrpcGroup struct {
 	Url string `long:"url" env:"TYPE" description:"host and port to grpc bind" choice:"bolt" choice:"mongo" default:"127.0.0.1:2339"`
-}
-
-// AvatarGroup defines options group for avatar params
-type AvatarGroup struct {
-	Type string `long:"type" env:"TYPE" description:"type of avatar storage" choice:"fs" choice:"bolt" choice:"mongo" default:"fs"`
-	FS   struct {
-		Path string `long:"path" env:"PATH" default:"./var/avatars" description:"avatars location"`
-	} `group:"fs" namespace:"fs" env-namespace:"FS"`
-	Bolt struct {
-		File string `long:"file" env:"FILE" default:"./var/avatars.db" description:"avatars bolt file location"`
-	} `group:"bolt" namespace:"bolt" env-namespace:"bolt"`
-	RszLmt int `long:"rsz-lmt" env:"RESIZE" default:"0" description:"max image size for resizing avatars on save"`
 }
 
 // CacheGroup defines options group for cache params
@@ -69,10 +50,10 @@ type CacheGroup struct {
 	} `group:"max" namespace:"max" env-namespace:"MAX"`
 }
 
-// MongoGroup holds all mongo params, used by store, avatar and cache
-type MongoGroup struct {
-	URL string `long:"url" env:"URL" description:"mongo url"`
-	DB  string `long:"db" env:"DB" default:"todo" description:"mongo database"`
+// DGraphGroup holds all mongo params, used by store, avatar and cache
+type DGraphGroup struct {
+	URL string `long:"url" env:"URL" description:"dgraph url"`
+	DB  string `long:"db" env:"DB" default:"todo" description:"dgraph database"`
 }
 
 // serverApp holds all active objects
@@ -80,13 +61,14 @@ type serverApp struct {
 	*ServerCommand
 	grpcPortListener net.Listener
 	grpcServer       *grpc.Server
-	db               *mongo.Client
+	db               *dgo.Dgraph
 
 	terminated chan struct{}
 }
 
 // Execute is the entry point for "server" command, called by flag parser
 func (s *ServerCommand) Execute(args []string) error {
+
 	//log.Printf("[INFO] start server on port %d", s.Port)
 	resetEnv("SECRET", "AUTH_GOOGLE_CSEC", "AUTH_GITHUB_CSEC", "AUTH_FACEBOOK_CSEC", "AUTH_YANDEX_CSEC")
 
@@ -116,12 +98,12 @@ func (a *serverApp) run(ctx context.Context) error {
 		<-ctx.Done()
 		log.Print("[INFO] shutdown initiated")
 		a.grpcServer.GracefulStop()
-		if a.db != nil {
-			err := a.db.Disconnect(ctx)
-			if err != nil {
-				log.Printf("[WARN] $%s\n", err)
-			}
-		}
+		//if a.db != nil {
+		//	err := a.db.Disconnect(ctx)
+		//	if err != nil {
+		//		log.Printf("[WARN] $%s\n", err)
+		//	}
+		//}
 		log.Print("[INFO] shutdown completed")
 	}()
 
@@ -156,39 +138,26 @@ func (*fakeHealthChecker) CheckHealth() error {
 // appHealthChecks returns a health check for the database. This will signal
 // to Kubernetes or other orchestrators that the server should not receive
 // traffic until the server is able to connect to its database.
-func appHealthChecks(db *mongo.Client) ([]health.Checker, func()) {
-	//dbCheck := sqlhealth.New(db)
-	c := &fakeHealthChecker{}
-	list := []health.Checker{c}
-	return list, func() {
-		//dbCheck.Stop()
-	}
-}
+//func appHealthChecks(db *dgo.Dgraph) ([]health.Checker, func()) {
+//	//dbCheck := sqlhealth.New(db)
+//	c := &fakeHealthChecker{}
+//	list := []health.Checker{c}
+//	return list, func() {
+//		//dbCheck.Stop()
+//	}
+//}
 
-func (s *ServerCommand) makeDb() (*mongo.Client, error) {
-	clientOptions := options.Client().
-		SetConnectTimeout(10 * time.Second).
-		SetServerSelectionTimeout(10 * time.Second).
-		SetSocketTimeout(10 * time.Second)
-
-	client, err := mongo.NewClientWithOptions(s.Mongo.URL, clientOptions)
+func (s *ServerCommand) makeDb() (*dgo.Dgraph, error) {
+	// Dial a gRPC connection. The address to dial to can be configured when
+	// setting up the dgraph cluster.
+	d, err := grpc.Dial(s.DGraph.URL, grpc.WithInsecure())
 	if err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+		log.Fatal(err)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	if err := client.Connect(ctx); err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
-	}
-
-	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Ping(ctx, readpref.Primary())
-	if err := client.Connect(ctx); err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
-	}
-
-	log.Println("connected")
-	return client, nil
+	return dgo.NewDgraphClient(
+		api.NewDgraphClient(d),
+	), nil
 }
 
 func (s *ServerCommand) makeGrpc() *grpc.Server {
@@ -210,15 +179,15 @@ func (s *ServerCommand) makeGrpc() *grpc.Server {
 
 // localRuntimeVar is a Wire provider function that returns the Message of the
 // Day variable based on a local file.
-func (s *ServerCommand) makeRuntimeVar() (*runtimevar.Variable, func(), error) {
-	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
-		WaitDuration: time.Minute,
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-	return v, func() { v.Close() }, nil
-}
+//func (s *ServerCommand) makeRuntimeVar() (*runtimevar.Variable, func(), error) {
+//	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
+//		WaitDuration: time.Minute,
+//	})
+//	if err != nil {
+//		return nil, nil, err
+//	}
+//	return v, func() { v.Close() }, nil
+//}
 
 // newServerApp prepares application and return it with all active parts
 // doesn't start anything
@@ -232,10 +201,10 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	{ // register rpc services
 
-		todoCollection := db.Database(s.Mongo.DB).Collection("todo")
+		//todoCollection := db.Database(s.Mongo.DB).Collection("todo")
 
 		// todo service
-		todoService := &service.TodoService{Model: &model.TodoModel{Collection: todoCollection}}
+		todoService := &service.TodoService{Model: &model.TodoModel{Db: db}}
 		todo.RegisterTodoServiceServer(grpcServer, todoService)
 
 		// ... another services ...
