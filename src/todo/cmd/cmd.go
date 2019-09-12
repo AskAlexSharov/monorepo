@@ -3,13 +3,11 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/hashicorp/go-multierror"
-	"github.com/pkg/errors"
 )
 
 // CommonOptionsCommander extends flags.Commander with SetCommon
@@ -47,13 +45,16 @@ func responseError(resp *http.Response) error {
 	if e != nil {
 		body = []byte("")
 	}
-	return errors.Errorf("error response %q, %s", resp.Status, body)
+	return fmt.Errorf("error response %q, %s", resp.Status, body)
 }
 
 // mkdir -p for all dirs
 func makeDirs(dirs ...string) (err error) {
 	for _, dir := range dirs {
-		err = multierror.Append(err, os.MkdirAll(dir, 0700))
+		if newErr := os.MkdirAll(dir, 0700); newErr != nil {
+			err = fmt.Errorf("%w, %w", err, newErr)
+		}
+
 	}
 	return err
 }

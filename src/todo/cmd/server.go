@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -18,12 +19,10 @@ import (
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
 	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/mongodb/mongo-go-driver/mongo"
-	"github.com/mongodb/mongo-go-driver/mongo/options"
-	"github.com/mongodb/mongo-go-driver/mongo/readpref"
-	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"gocloud.dev/health"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"gocloud.dev/runtimevar"
 	"gocloud.dev/runtimevar/filevar"
 	"google.golang.org/grpc"
@@ -153,38 +152,29 @@ func (*fakeHealthChecker) CheckHealth() error {
 	return nil
 }
 
-// appHealthChecks returns a health check for the database. This will signal
-// to Kubernetes or other orchestrators that the server should not receive
-// traffic until the server is able to connect to its database.
-func appHealthChecks(db *mongo.Client) ([]health.Checker, func()) {
-	//dbCheck := sqlhealth.New(db)
-	c := &fakeHealthChecker{}
-	list := []health.Checker{c}
-	return list, func() {
-		//dbCheck.Stop()
-	}
-}
+// TODO: implement health-check https://github.com/grpc/grpc/blob/master/doc/health-checking.md
 
 func (s *ServerCommand) makeDb() (*mongo.Client, error) {
 	clientOptions := options.Client().
+		ApplyURI(s.Mongo.URL).
 		SetConnectTimeout(10 * time.Second).
 		SetServerSelectionTimeout(10 * time.Second).
 		SetSocketTimeout(10 * time.Second)
 
-	client, err := mongo.NewClientWithOptions(s.Mongo.URL, clientOptions)
+	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+		return nil, fmt.Errorf("Can't connect to Mongo on address: %v: %w", s.Mongo.URL, err)
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	if err := client.Connect(ctx); err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+		return nil, fmt.Errorf("Can't connect to Mongo on address: %v: %w", s.Mongo.URL, err)
 	}
 
 	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Ping(ctx, readpref.Primary())
 	if err := client.Connect(ctx); err != nil {
-		return nil, errors.Wrap(err, "Can't connect to Mongo on address: "+s.Mongo.URL)
+		return nil, fmt.Errorf("Can't connect to Mongo on address: %v: %w", s.Mongo.URL, err)
 	}
 
 	log.Println("connected")
@@ -211,7 +201,7 @@ func (s *ServerCommand) makeGrpc() *grpc.Server {
 // localRuntimeVar is a Wire provider function that returns the Message of the
 // Day variable based on a local file.
 func (s *ServerCommand) makeRuntimeVar() (*runtimevar.Variable, func(), error) {
-	v, err := filevar.New("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
+	v, err := filevar.OpenVariable("message_of_the_day", runtimevar.StringDecoder, &filevar.Options{
 		WaitDuration: time.Minute,
 	})
 	if err != nil {
@@ -225,7 +215,7 @@ func (s *ServerCommand) makeRuntimeVar() (*runtimevar.Variable, func(), error) {
 func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	db, err := s.makeDb()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to make db")
+		return nil, fmt.Errorf("failed to make db: %w", err)
 	}
 
 	grpcServer := s.makeGrpc()
@@ -246,7 +236,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	lis, err := s.makeGrpcPortListener()
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to listen: "+s.Grpc.Url)
+		return nil, fmt.Errorf("Failed to listen: %s: %w", s.Grpc.Url, err)
 	}
 
 	return &serverApp{

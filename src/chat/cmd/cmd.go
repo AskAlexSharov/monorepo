@@ -3,12 +3,11 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/pkg/errors"
 )
 
 // CommonOptionsCommander extends flags.Commander with SetCommon
@@ -46,14 +45,16 @@ func responseError(resp *http.Response) error {
 	if e != nil {
 		body = []byte("")
 	}
-	return errors.Errorf("error response %q, %s", resp.Status, body)
+
+	return fmt.Errorf("error response %q, %s", resp.Status, body)
+	//return errors.Errorf("error response %q, %s", resp.Status, body)
 }
 
 // mkdir -p for all dirs
 func makeDirs(dirs ...string) error {
 	for _, dir := range dirs {
 		if err := os.MkdirAll(dir, 0700); err != nil { // If path is already a directory, MkdirAll does nothing
-			return errors.Wrapf(err, "can't make directory %s", dir)
+			return fmt.Errorf("can't make directory %s: %w", dir, err)
 		}
 	}
 	return nil

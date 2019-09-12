@@ -5,7 +5,6 @@ import (
 
 	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
 	"github.com/AskAlexSharov/monorepo/src/todo/model"
-	"github.com/fatih/structs"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -63,7 +62,7 @@ func (s TodoService) Delete(ctx context.Context, req *todo.DeleteRequest) (*todo
 }
 
 func (s TodoService) Update(ctx context.Context, req *todo.UpdateRequest) (*todo.UpdateResponse, error) {
-	if err := s.Model.UpdateById(ctx, req.Item.Id, structs.New(req.Item).Map()); err != nil {
+	if err := s.Model.UpdateById(ctx, req.Item.Id, req.Item); err != nil {
 		return nil, status.Errorf(codes.Internal, "Could not update item from the database: %s", err)
 	}
 	return &todo.UpdateResponse{}, nil
@@ -71,7 +70,7 @@ func (s TodoService) Update(ctx context.Context, req *todo.UpdateRequest) (*todo
 
 func (s TodoService) UpdateBulk(ctx context.Context, req *todo.UpdateBulkRequest) (*todo.UpdateBulkResponse, error) {
 	for _, item := range req.Items {
-		if err := s.Model.UpdateById(ctx, item.Id, structs.New(item).Map()); err != nil {
+		if err := s.Model.UpdateById(ctx, item.Id, item); err != nil {
 			return nil, status.Errorf(codes.Internal, "Could not update items from the database: %s", err)
 		}
 	}

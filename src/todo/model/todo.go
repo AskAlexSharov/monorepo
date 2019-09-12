@@ -2,15 +2,13 @@ package model
 
 import (
 	"context"
-	"github.com/mongodb/mongo-go-driver/bson/primitive"
-	"log"
-	"time"
-
 	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
-	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"log"
 )
 
 type TodoModel struct {
@@ -79,9 +77,9 @@ func (s TodoModel) RemoveById(ctx context.Context, id string) error {
 	return nil
 }
 
-func (s TodoModel) UpdateById(ctx context.Context, id string, data map[string]interface{}) error {
+func (s TodoModel) UpdateById(ctx context.Context, id string, data interface{}) error {
 	filter := bson.M{"_id": id}
-	data["updated_at"] = time.Now()
+	//data["updated_at"] = time.Now()
 	_, err := s.Collection.UpdateOne(ctx, filter, data)
 	if err != nil {
 		return status.Errorf(codes.Internal, "Could not update item from the database: %s", err)

@@ -36,8 +36,8 @@ func New() Config {
 
 type Chatroom struct {
 	Name      string
-	messages  []Message
-	Observers map[string]chan Message
+	messages  []*Message
+	Observers map[string]chan *Message
 }
 
 type Message struct {
@@ -53,14 +53,14 @@ type User struct {
 
 type mutationResolver struct{ *resolver }
 
-func (r *mutationResolver) Post(ctx context.Context, text string, username string, roomName string) (Message, error) {
+func (r *mutationResolver) Post(ctx context.Context, text string, username string, roomName string) (*Message, error) {
 	room := r.Rooms[roomName]
 	if room == nil {
-		room = &Chatroom{Name: roomName, Observers: map[string]chan Message{}}
+		room = &Chatroom{Name: roomName, Observers: map[string]chan *Message{}}
 		r.Rooms[roomName] = room
 	}
 
-	message := Message{
+	message := &Message{
 		ID:        randString(8),
 		CreatedAt: time.Now(),
 		Text:      text,
@@ -100,7 +100,7 @@ func (r *queryResolver) Room(ctx context.Context, name string) (*Chatroom, error
 	r.mu.Lock()
 	room := r.Rooms[name]
 	if room == nil {
-		room = &Chatroom{Name: name, Observers: map[string]chan Message{}}
+		room = &Chatroom{Name: name, Observers: map[string]chan *Message{}}
 		r.Rooms[name] = room
 	}
 	r.mu.Unlock()
@@ -112,23 +112,23 @@ func (r *queryResolver) User(ctx context.Context, name string) (*User, error) {
 	return UserLoaderFromCtx(ctx).Load(name)
 }
 
-func (r *Chatroom) Messages(ctx context.Context) ([]Message, error) {
+func (r *Chatroom) Messages(ctx context.Context) ([]*Message, error) {
 	return r.messages, nil
 }
 
 type subscriptionResolver struct{ *resolver }
 
-func (r *subscriptionResolver) MessageAdded(ctx context.Context, roomName string) (<-chan Message, error) {
+func (r *subscriptionResolver) MessageAdded(ctx context.Context, roomName string) (<-chan *Message, error) {
 	r.mu.Lock()
 	room := r.Rooms[roomName]
 	if room == nil {
-		room = &Chatroom{Name: roomName, Observers: map[string]chan Message{}}
+		room = &Chatroom{Name: roomName, Observers: map[string]chan *Message{}}
 		r.Rooms[roomName] = room
 	}
 	r.mu.Unlock()
 
 	id := randString(8)
-	events := make(chan Message, 1)
+	events := make(chan *Message, 1)
 
 	go func() {
 		<-ctx.Done()

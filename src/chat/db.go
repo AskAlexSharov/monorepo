@@ -1,5 +1,5 @@
-//go:generate dataloaden -keys string github.com/AskAlexSharov/monorepo/src/chat.User
-//go:generate dataloaden -keys string github.com/AskAlexSharov/monorepo/src/chat.Message
+//go:generate dataloaden UserLoader string *github.com/AskAlexSharov/monorepo/src/chat.User
+//go:generate dataloaden MessageLoader string *github.com/AskAlexSharov/monorepo/src/chat.Message
 
 package chat
 
@@ -20,22 +20,22 @@ func UserLoaderToCtx(ctx context.Context, l *UserLoader) context.Context {
 	return context.WithValue(ctx, userCtxKey, l)
 }
 
-func NewUserLoader() *UserLoader {
-	return &UserLoader{
-		wait:     1 * time.Microsecond,
-		maxBatch: 100,
-		fetch: func(keys []string) ([]*User, []error) {
-
-			users := make([]*User, len(keys))
-			errors := make([]error, len(keys))
-
-			for i, _ := range keys {
-				users[i] = &User{Name: "user"}
-			}
-			return users, errors
-		},
-	}
-}
+//func NewUserLoader() *UserLoader {
+//	return &UserLoader{
+//		wait:     1 * time.Microsecond,
+//		maxBatch: 100,
+//		fetch: func(keys []string) ([]*User, []error) {
+//
+//			users := make([]*User, len(keys))
+//			errors := make([]error, len(keys))
+//
+//			for i, _ := range keys {
+//				users[i] = &User{Name: "user"}
+//			}
+//			return users, errors
+//		},
+//	}
+//}
 
 type msgCtxKeyT struct{}
 
