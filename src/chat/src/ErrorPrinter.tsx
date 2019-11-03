@@ -22,8 +22,10 @@ export default function PrintError(props: Props) {
     </div>);
   }
 
+  const errMsg = err.toString()
+
   return (
-    <div>Error! ${err}</div>
+    <div>Error! ${errMsg}</div>
   );
 }
 

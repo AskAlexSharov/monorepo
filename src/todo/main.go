@@ -10,7 +10,7 @@ import (
 
 	"github.com/AskAlexSharov/monorepo/src/todo/cmd"
 	"github.com/hashicorp/logutils"
-	flags "github.com/jessevdk/go-flags"
+	"github.com/jessevdk/go-flags"
 )
 
 // Opts with all cli commands and flags

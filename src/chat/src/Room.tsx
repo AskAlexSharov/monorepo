@@ -97,7 +97,7 @@ function Room(props: any) {
   const [room, loading, err, setRoom] = useRoom(props.channel);
   useSubscription(props.channel, setRoom);
   const [text, setText] = useState("");
-  const onSubmit = useMutation(Mutation);
+  const [onSubmit] = useMutation(Mutation);
 
   if (err) return <PrintError err={err} />;
   if (loading) return <div>loading</div>;

@@ -5,9 +5,8 @@ GO_CACHE=$(GOCACHE)
 gen:
 	rm -rf ./api/*
 	mkdir -p ./api/todo
-	protoc -I $(protoInclude):./../../api/todo \
-		--go_out=plugins=grpc:./api/todo \
-		todo.proto
+
+	gunk generate github.com/AskAlexSharov/monorepo/api/todo
 
 build:
 	ls $(GO_CACHE)

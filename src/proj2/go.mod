@@ -13,3 +13,5 @@ require (
 	google.golang.org/grpc v1.17.0
 	honnef.co/go/tools v0.0.0-20190109154334-5bcec433c8ea // indirect
 )
+
+go 1.13

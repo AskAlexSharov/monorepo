@@ -1,0 +1,14 @@
+[generate go]
+out=api/todo/
+plugins=grpc
+
+[generate]
+out=api/todo/
+protoc=grpc-gateway
+logtostderr=true
+
+[generate]
+out=api/todo/
+protoc=js
+import_style=commonjs
+binary

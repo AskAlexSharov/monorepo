@@ -2,13 +2,14 @@ package model
 
 import (
 	"context"
+	"log"
+
 	"github.com/AskAlexSharov/monorepo/src/todo/api/todo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
 )
 
 type TodoModel struct {
